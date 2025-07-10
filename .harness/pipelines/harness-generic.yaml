@@ -36,6 +36,7 @@ pipeline:
             type: CI
             spec:
               infrastructure:
+                type: KubernetesDirect
                 spec:
                   connectorRef: <+pipeline.variables.dockerRegistry>
               execution:
@@ -44,6 +45,7 @@ pipeline:
                       identifier: run_build
                       type: Run
                       spec:
+                        connectorRef: <+input>.allowedValues(org.Dockerhub,account.harnessImage)
                         image: <+pipeline.variables.dockerImage>
                         command: |
                           if [ "<+pipeline.variables.buildTool>" = "npm" ]; then
@@ -57,6 +59,20 @@ pipeline:
         template:
           templateRef: audit_stage_template
           versionLabel: v0.1
+          templateInputs:
+            type: CI
+            spec:
+              infrastructure:
+                type: KubernetesDirect
+                spec:
+                  connectorRef: <+input>
+              execution:
+                steps:
+                  - step:
+                      identifier: npm_audit
+                      type: Run
+                      spec:
+                        connectorRef: <+input>.allowedValues(org.Dockerhub,account.harnessImage)
     - stage:
         name: Deploy Stage
         identifier: deploy_stage
@@ -68,15 +84,8 @@ pipeline:
             spec:
               environment:
                 environmentRef: <+pipeline.variables.environment>
-              infrastructureDefinitions:
-                - identifier: <+pipeline.variables.k8sCluster>
-              execution:
-                steps:
-                  - step:
-                      identifier: deploy_echo
-                      type: ShellScript
-                      spec:
-                        shell: Bash
-                        script: |
-                          echo "🟢 Déploiement de <+pipeline.variables.buildTool> vers <+pipeline.variables.environment> sur le namespace <+pipeline.variables.deployNamespace>"
-                          echo "🔐 Clé API : <+secrets.getValue('pipeline.variables.secretApiKey')>"
+                serviceOverrideInputs: <+input>
+                infrastructureDefinitions: <+input>
+              service:
+                serviceRef: <+input>
+                serviceInputs: <+input>
