@@ -1,6 +1,8 @@
 template:
-  name: audit_stage_template
+  name: audit stage template
   identifier: audit_stage_template
+  orgIdentifier: stf
+  projectIdentifier: harness_generic_template
   versionLabel: v1
   type: Stage
   spec:

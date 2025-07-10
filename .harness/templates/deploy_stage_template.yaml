@@ -1,6 +1,8 @@
 template:
-  name: deploy_stage_template
+  name: deploy stage template
   identifier: deploy_stage_template
+  orgIdentifier: stf
+  projectIdentifier: harness_generic_template
   versionLabel: v1
   type: Stage
   spec:
