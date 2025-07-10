@@ -1,0 +1,35 @@
+template:
+  name: audit stage template
+  identifier: audit_stage_template
+  versionLabel: v0.1
+  type: Stage
+  projectIdentifier: harness_generic_template
+  orgIdentifier: stf
+  tags: {}
+  icon: data:image/png;base64,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
+  spec:
+    type: CI
+    spec:
+      cloneCodebase: true
+      infrastructure:
+        type: KubernetesDirect
+        spec:
+          connectorRef: <+input>
+          namespace: ci-audit
+          automountServiceAccountToken: true
+          nodeSelector: {}
+          os: Linux
+      execution:
+        steps:
+          - step:
+              name: NPM Audit
+              identifier: npm_audit
+              type: Run
+              spec:
+                connectorRef: <+input>.allowedValues(org.Dockerhub,account.harnessImage)
+                image: node:18
+                shell: Bash
+                command: |-
+                  mkdir -p audit
+                  npm audit --audit-level=high --json > audit/audit-report.json || true
+                  cat audit/audit-report.json
