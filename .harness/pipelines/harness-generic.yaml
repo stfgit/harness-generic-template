@@ -38,7 +38,7 @@ pipeline:
               infrastructure:
                 type: KubernetesDirect
                 spec:
-                  connectorRef: <+pipeline.variables.dockerRegistry>
+                  connectorRef: <+pipeline.variables.k8sCluster>
               execution:
                 steps:
                   - step:
@@ -84,7 +84,6 @@ pipeline:
             spec:
               environment:
                 environmentRef: <+pipeline.variables.environment>
-                serviceOverrideInputs: <+input>
                 infrastructureDefinitions: <+input>
               service:
                 serviceRef: <+input>
