@@ -1,8 +1,8 @@
 pipeline:
   name: harness generic
   identifier: harness_generic
-  projectIdentifier: <+input>
-  orgIdentifier: <+input>
+  projectIdentifier: harness_generic_template
+  orgIdentifier: stf
   variables:
     - name: environment
       type: String
