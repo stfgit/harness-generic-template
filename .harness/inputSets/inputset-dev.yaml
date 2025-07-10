@@ -1,0 +1,12 @@
+inputSet:
+  name: dev-input
+  identifier: dev_input
+  pipeline:
+    variables:
+      environment: dev
+      buildTool: npm
+      dockerImage: node:20-alpine
+      dockerRegistry: account.dev_docker_connector
+      k8sCluster: dev_k8s
+      deployNamespace: dev-ns
+      secretApiKey: account.DEV_API_KEY

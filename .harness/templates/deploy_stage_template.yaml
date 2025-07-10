@@ -1,0 +1,22 @@
+template:
+  name: deploy_stage_template
+  identifier: deploy_stage_template
+  versionLabel: v1
+  type: Stage
+  spec:
+    type: Deployment
+    spec:
+      environment:
+        environmentRef: <+input>
+        deployToAll: false
+        infrastructureDefinitions:
+          - identifier: <+input>
+      execution:
+        steps:
+          - step:
+              name: Deploy Echo
+              identifier: deploy_echo
+              type: ShellScript
+              spec:
+                shell: Bash
+                script: <+input>

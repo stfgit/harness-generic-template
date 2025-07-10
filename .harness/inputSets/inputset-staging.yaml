@@ -1,0 +1,12 @@
+inputSet:
+  name: staging-input
+  identifier: staging_input
+  pipeline:
+    variables:
+      environment: staging
+      buildTool: npm
+      dockerImage: node:18-slim
+      dockerRegistry: account.staging_docker_connector
+      k8sCluster: staging_k8s
+      deployNamespace: staging-ns
+      secretApiKey: account.STAGING_API_KEY

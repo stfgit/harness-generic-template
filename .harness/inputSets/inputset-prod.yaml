@@ -1,0 +1,12 @@
+inputSet:
+  name: prod-input
+  identifier: prod_input
+  pipeline:
+    variables:
+      environment: prod
+      buildTool: npm
+      dockerImage: node:18
+      dockerRegistry: account.prod_docker_connector
+      k8sCluster: prod_k8s
+      deployNamespace: prod-ns
+      secretApiKey: account.PROD_API_KEY
