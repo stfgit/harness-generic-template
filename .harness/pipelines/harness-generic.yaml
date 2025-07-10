@@ -1,6 +1,6 @@
 pipeline:
-  name: harness-generic-template
-  identifier: harness_generic_template
+  name: harness generic
+  identifier: harness_generic
   projectIdentifier: <+input>
   orgIdentifier: <+input>
   variables:
@@ -31,7 +31,7 @@ pipeline:
         identifier: build_stage
         template:
           templateRef: build_stage_template
-          versionLabel: v1
+          versionLabel: v0.1
           templateInputs:
             type: CI
             spec:
@@ -56,13 +56,13 @@ pipeline:
         identifier: audit_stage
         template:
           templateRef: audit_stage_template
-          versionLabel: v1
+          versionLabel: v0.1
     - stage:
         name: Deploy Stage
         identifier: deploy_stage
         template:
           templateRef: deploy_stage_template
-          versionLabel: v1
+          versionLabel: v0.1
           templateInputs:
             type: Deployment
             spec:
