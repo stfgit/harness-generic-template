@@ -1,6 +1,8 @@
 template:
-  name: build_stage_template
+  name: build-stage-template
   identifier: build_stage_template
+  orgIdentifier: stf
+  projectIdentifier: Nextly
   versionLabel: v1
   type: Stage
   spec:
