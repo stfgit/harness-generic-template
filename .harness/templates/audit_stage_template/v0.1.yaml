@@ -30,6 +30,9 @@ template:
                 image: node:18
                 shell: Bash
                 command: |-
-                  mkdir -p audit
-                  npm audit --audit-level=high --json > audit/audit-report.json || true
-                  cat audit/audit-report.json
+                  if [ "<+pipeline.variables.buildTool>" = "npm" ]; then
+                    npm audit --audit-level=high --json > audit/audit-report.json || true
+                    cat audit/audit-report.json
+                  elif [ "<+pipeline.variables.buildTool>" = "maven" ]; then
+                    echo audit mvn
+                  fi
