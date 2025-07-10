@@ -6,7 +6,7 @@ inputSet:
       environment: dev
       buildTool: npm
       dockerImage: node:20-alpine
-      dockerRegistry: account.dev_docker_connector
-      k8sCluster: dev_k8s
+      dockerRegistry: Dockerhub
+      k8sCluster: kub-desktop
       deployNamespace: dev-ns
-      secretApiKey: account.DEV_API_KEY
+      # secretApiKey: account.DEV_API_KEY

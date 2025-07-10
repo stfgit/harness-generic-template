@@ -6,7 +6,7 @@ inputSet:
       environment: prod
       buildTool: npm
       dockerImage: node:18
-      dockerRegistry: account.prod_docker_connector
-      k8sCluster: prod_k8s
+      dockerRegistry: Dockerhub
+      k8sCluster: kub-desktop
       deployNamespace: prod-ns
-      secretApiKey: account.PROD_API_KEY
+      # secretApiKey: account.PROD_API_KEY
