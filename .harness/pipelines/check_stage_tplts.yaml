@@ -1,0 +1,52 @@
+pipeline:
+  name: check stage tplts
+  identifier: check_stage_tplts
+  projectIdentifier: harness_generic_template
+  orgIdentifier: stf
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: org.gitstf
+        repoName: harness-generic-template
+        build: <+input>
+  stages:
+    - stage:
+        name: build
+        identifier: build
+        template:
+          templateRef: maven_build_stage
+          versionLabel: v0.1
+          templateInputs:
+            type: CI
+            spec:
+              infrastructure:
+                type: KubernetesDirect
+                spec:
+                  connectorRef: <+input>
+                  namespace: <+input>.default(harness-ci)
+              execution:
+                steps:
+                  - step:
+                      identifier: mvn_build
+                      type: Run
+                      spec:
+                        connectorRef: <+input>
+                        image: <+input>.default(maven:3.9.6-eclipse-temurin-21)
+                  - step:
+                      identifier: mvn_test_with_coverage
+                      type: Run
+                      spec:
+                        connectorRef: <+input>
+                        image: <+input>.default(maven:3.9.6-eclipse-temurin-21)
+                  - step:
+                      identifier: coverage_quality_gate
+                      type: Run
+                      spec:
+                        connectorRef: <+input>
+                  - step:
+                      identifier: build_and_push_docker_image
+                      type: BuildAndPushDockerRegistry
+                      spec:
+                        connectorRef: <+input>
+                        repo: <+input>
