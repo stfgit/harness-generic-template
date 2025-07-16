@@ -8,7 +8,7 @@ pipeline:
     ci:
       codebase:
         connectorRef: org.gitstf
-        repoName: mower
+        repoName: mower-java
         build: <+input>
         sparseCheckout: []
   stages:
