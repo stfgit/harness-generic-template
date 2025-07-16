@@ -17,6 +17,7 @@ template:
           connectorRef: <+input>
           namespace: ci
           automountServiceAccountToken: true
+          nodeSelector: {}
           os: Linux
       execution:
         steps:
@@ -31,5 +32,5 @@ template:
                 command: <+input>
                 resources:
                   limits:
-                    memory: 2Gi
-                    cpu: 2000m
+                    memory: <+input>.default(2Gi)
+                    cpu: <+input>.default(2000m)
