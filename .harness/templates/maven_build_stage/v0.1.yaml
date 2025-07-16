@@ -134,7 +134,7 @@ template:
                   echo "======================="
 
                   # Récupérer la variable de l'étape précédente
-                  COVERAGE="<+pipeline.stages.Build_and_test.spec.execution.steps.Maven_Test_Coverage.output.outputVariables.COVERAGE_PERCENT>"
+                  COVERAGE="<+pipeline.stages.mvn_test_with_coverage.spec.execution.steps.Maven_Test_Coverage.output.outputVariables.COVERAGE_PERCENT>"
 
                   echo "📊 Current Coverage: ${COVERAGE}%"
 
