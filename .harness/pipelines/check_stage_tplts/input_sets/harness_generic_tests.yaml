@@ -44,7 +44,7 @@ inputSet:
                         type: BuildAndPushDockerRegistry
                         spec:
                           connectorRef: org.Dockerhub
-                          repo: harness_generic_tests
+                          repo: stfgit/harness_generic_tests
   name: harness generic tests
   identifier: harness_generic_tests
   orgIdentifier: stf
