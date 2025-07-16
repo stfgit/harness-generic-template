@@ -125,7 +125,7 @@ template:
               spec:
                 connectorRef: <+input>
                 image: <+runtime>.default(alpine:latest)
-                shell: Bash
+                shell: Sh
                 command: |-
                   # Installer bc pour les calculs (si pas disponible)
                   apk add --no-cache bc >/dev/null 2>&1 || true
