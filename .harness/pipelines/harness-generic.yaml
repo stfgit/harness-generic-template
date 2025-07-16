@@ -53,6 +53,10 @@ pipeline:
                           elif [ "<+pipeline.variables.buildTool>" = "maven" ]; then
                             mvn clean install
                           fi
+                        resources:
+                          limits:
+                            memory: <+input>.default(2Gi)
+                            cpu: <+input>.default(2000m)
     - stage:
         name: Audit Stage
         identifier: audit_stage
@@ -84,6 +88,7 @@ pipeline:
             spec:
               environment:
                 environmentRef: <+pipeline.variables.environment>
+                serviceOverrideInputs: <+input>
                 infrastructureDefinitions: <+input>
               service:
                 serviceRef: <+input>
