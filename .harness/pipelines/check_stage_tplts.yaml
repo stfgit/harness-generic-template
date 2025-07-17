@@ -13,11 +13,12 @@ pipeline:
         sparseCheckout: []
   stages:
     - stage:
-        name: build
-        identifier: build
+        name: build and push
+        identifier: build_and_push
         template:
-          templateRef: maven_build_stage
+          templateRef: account.maven_build_stage_tplt
           versionLabel: v0.1
+          gitBranch: main
           templateInputs:
             type: CI
             spec:
