@@ -13,6 +13,21 @@ pipeline:
         sparseCheckout: []
   stages:
     - stage:
+        name: check sources
+        identifier: check_sources
+        template:
+          templateRef: account.source_code_scan
+          versionLabel: v0.1
+          gitBranch: main
+          templateInputs:
+            type: SecurityTests
+            spec:
+              infrastructure:
+                type: KubernetesDirect
+                spec:
+                  connectorRef: <+input>
+                  namespace: <+input>.default(harness-ci)
+    - stage:
         name: build and push
         identifier: build_and_push
         template:
