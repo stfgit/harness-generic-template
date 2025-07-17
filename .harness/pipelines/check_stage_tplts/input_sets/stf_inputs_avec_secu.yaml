@@ -1,0 +1,62 @@
+inputSet:
+  pipeline:
+    identifier: check_stage_tplts
+    properties:
+      ci:
+        codebase:
+          build:
+            spec:
+              branch: main
+            type: branch
+    stages:
+      - stage:
+          identifier: check_sources
+          template:
+            templateInputs:
+              type: SecurityTests
+              spec:
+                infrastructure:
+                  type: KubernetesDirect
+                  spec:
+                    connectorRef: account.k8sdocacloud
+                    namespace: harness-delegate-ng
+      - stage:
+          identifier: build_and_push
+          template:
+            templateInputs:
+              type: CI
+              spec:
+                infrastructure:
+                  type: KubernetesDirect
+                  spec:
+                    connectorRef: account.k8sdocacloud
+                    namespace: harness-delegate-ng
+                execution:
+                  steps:
+                    - step:
+                        identifier: mvn_build
+                        type: Run
+                        spec:
+                          connectorRef: org.Dockerhub
+                          image: maven:3.9.6-eclipse-temurin-21
+                    - step:
+                        identifier: mvn_test_with_coverage
+                        type: Run
+                        spec:
+                          connectorRef: org.Dockerhub
+                          image: maven:3.9.6-eclipse-temurin-21
+                    - step:
+                        identifier: coverage_quality_gate
+                        type: Run
+                        spec:
+                          connectorRef: org.Dockerhub
+                    - step:
+                        identifier: build_and_push_docker_image
+                        type: BuildAndPushDockerRegistry
+                        spec:
+                          connectorRef: org.Dockerhub
+                          repo: stfgit/harness_generic_tests
+  name: stf inputs avec secu
+  identifier: stf_inputs_avec_secu
+  orgIdentifier: stf
+  projectIdentifier: harness_generic_template
