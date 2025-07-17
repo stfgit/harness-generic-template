@@ -1,0 +1,175 @@
+template:
+  name: maven build stage tplt
+  type: Stage
+  tags:
+    java: ""
+    maven: ""
+    springboot: ""
+    docker: ""
+  icon: data:image/png;base64,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
+  spec:
+    type: CI
+    spec:
+      cloneCodebase: true
+      infrastructure:
+        type: KubernetesDirect
+        spec:
+          connectorRef: <+input>
+          namespace: <+input>.default(harness-ci)
+          automountServiceAccountToken: true
+          nodeSelector: {}
+          os: Linux
+      execution:
+        steps:
+          - step:
+              type: Run
+              name: mvn build
+              identifier: mvn_build
+              spec:
+                connectorRef: <+input>
+                image: <+input>.default(maven:3.9.6-eclipse-temurin-21)
+                shell: Bash
+                command: |-
+                  echo "Configuring Maven cache directory..."
+                  mkdir -p /harness/.m2/repository
+
+                  echo "🔨 Starting Maven build..."
+                  mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -Dmaven.repo.local=/harness/.m2/repository -s settings.xml -B -V
+                  echo "✅ Maven build completed successfully"
+
+                  # Afficher les artefacts créés
+                  echo "📦 Generated artifacts:"
+                  ls -la target/*.jar 2>/dev/null || echo "No JAR files found"
+          - step:
+              type: Run
+              name: mvn test with coverage
+              identifier: mvn_test_with_coverage
+              spec:
+                connectorRef: <+input>
+                image: <+input>.default(maven:3.9.6-eclipse-temurin-21)
+                shell: Bash
+                command: |-
+                  echo "🧪 Running tests with JaCoCo coverage..."
+
+                  mvn test jacoco:report -B -Dmaven.repo.local=/harness/.m2/repository -s settings.xml
+
+                  if [ -d "target/site/jacoco" ]; then
+                    echo "📈 Coverage Summary:"
+                    if [ -f target/site/jacoco/jacoco.csv ]; then
+                      echo "🔍 Analyzing JaCoCo CSV..."
+                      
+                      # Sommer toutes les lignes (sauf l'en-tête)
+                      # Colonnes: 8=LINE_MISSED, 9=LINE_COVERED
+                      TOTALS=$(awk -F',' '
+                        BEGIN { missed=0; covered=0 }
+                        NR>1 { 
+                          # Nettoyer les retours chariot et sommer
+                          gsub(/\r/, "", $8); gsub(/\r/, "", $9)
+                          if ($8 ~ /^[0-9]+$/) missed += $8
+                          if ($9 ~ /^[0-9]+$/) covered += $9
+                        }
+                        END { print missed "," covered }
+                      ' target/site/jacoco/jacoco.csv)
+                      
+                      LINE_MISSED=$(echo "$TOTALS" | cut -d',' -f1)
+                      LINE_COVERED=$(echo "$TOTALS" | cut -d',' -f2)
+                      LINE_TOTAL=$((LINE_MISSED + LINE_COVERED))
+
+                      echo "📊 Coverage calculation:"
+                      echo "   Lines missed: $LINE_MISSED"
+                      echo "   Lines covered: $LINE_COVERED"  
+                      echo "   Total lines: $LINE_TOTAL"
+
+                      if [ "$LINE_TOTAL" -gt 0 ]; then
+                        LINE_PERCENT=$(awk -v covered="$LINE_COVERED" -v total="$LINE_TOTAL" \
+                          'BEGIN { printf("%.1f", total>0 ? covered*100/total : 0) }')
+                        echo "📊 Line Coverage: ${LINE_PERCENT}% ($LINE_COVERED/$LINE_TOTAL lines)"
+                        
+                        # Affichage par classe pour debug
+                        echo ""
+                        echo "📋 Coverage by class:"
+                        awk -F',' 'NR>1 { 
+                          gsub(/\r/, "", $8); gsub(/\r/, "", $9)
+                          if ($8 ~ /^[0-9]+$/ && $9 ~ /^[0-9]+$/) {
+                            total = $8 + $9
+                            if (total > 0) {
+                              percent = $9 * 100 / total
+                              printf("   %-30s: %5.1f%% (%d/%d)\n", $3, percent, $9, total)
+                            }
+                          }
+                        }' target/site/jacoco/jacoco.csv
+                        
+                      else
+                        echo "❌ No lines found for coverage calculation"
+                        LINE_PERCENT="0.0"
+                      fi
+                      
+                      echo ""
+                      echo "🔍 Manual verification:"
+                      echo "Calculated result: ${LINE_PERCENT}% (${LINE_COVERED}/${LINE_TOTAL} lines)"
+                      
+                    fi
+                  else
+                    echo "⚠️ JaCoCo report directory not found"
+                    mvn jacoco:help -Ddetail=true
+                  fi
+                reports:
+                  type: JUnit
+                  spec:
+                    paths:
+                      - target/surefire-reports/*.xml
+                outputVariables:
+                  - name: COVERAGE_PERCENT
+                    type: String
+                    value: LINE_PERCENT
+              description: Uses Jacoco
+          - step:
+              type: Run
+              name: coverage quality gate
+              identifier: coverage_quality_gate
+              spec:
+                connectorRef: <+input>
+                image: <+runtime>.default(alpine:latest)
+                shell: Sh
+                command: |-
+                  # Installer bc pour les calculs (si pas disponible)
+                  apk add --no-cache bc >/dev/null 2>&1 || true
+
+                  echo "🎯 COVERAGE QUALITY GATE"
+                  echo "======================="
+
+                  # Récupérer la variable de l'étape précédente
+                  COVERAGE="<+stage.spec.execution.steps.mvn_test_with_coverage.output.outputVariables.COVERAGE_PERCENT>"
+
+                  echo "📊 Current Coverage: ${COVERAGE}%"
+
+                  # Définir les seuils
+                  MIN_COVERAGE=70
+                  TARGET_COVERAGE=80
+
+                  # Vérification des seuils
+                  if [ "$(echo "${COVERAGE} >= ${TARGET_COVERAGE}" | bc -l)" -eq 1 ]; then
+                    echo "🎉 EXCELLENT! Coverage ${COVERAGE}% exceeds target ${TARGET_COVERAGE}%"
+                    exit 0
+                  elif [ "$(echo "${COVERAGE} >= ${MIN_COVERAGE}" | bc -l)" -eq 1 ]; then
+                    echo "✅ PASS! Coverage ${COVERAGE}% meets minimum ${MIN_COVERAGE}%"
+                    echo "💡 Try to reach target ${TARGET_COVERAGE}% for excellent quality"
+                    exit 0
+                  else
+                    echo "❌ FAIL! Coverage ${COVERAGE}% below minimum ${MIN_COVERAGE}%"
+                    echo "🚨 Deployment blocked - please improve test coverage"
+                    exit 1
+                  fi
+          - step:
+              type: BuildAndPushDockerRegistry
+              name: build and push docker image
+              identifier: build_and_push_docker_image
+              spec:
+                connectorRef: <+input>
+                repo: <+input>
+                tags:
+                  - <+pipeline.executionId>
+                  - latest
+  description: maven, tests u, jacoco coverage, build et push docker
+  identifier: maven_build_stage_tplt
+  versionLabel: v0.1
