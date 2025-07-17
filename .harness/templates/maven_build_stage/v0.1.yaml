@@ -113,6 +113,11 @@ template:
                     echo "⚠️ JaCoCo report directory not found"
                     mvn jacoco:help -Ddetail=true
                   fi
+                reports:
+                  type: JUnit
+                  spec:
+                    paths:
+                      - target/surefire-reports/*.xml
                 outputVariables:
                   - name: COVERAGE_PERCENT
                     type: String
