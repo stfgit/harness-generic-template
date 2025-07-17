@@ -50,6 +50,10 @@ template:
                       log:
                         level: info
                       fail_on_severity: high
+                    resources:
+                      limits:
+                        memory: 1Gi
+                        cpu: 500m
               - step:
                   type: AquaTrivy
                   name: aquatrivy
