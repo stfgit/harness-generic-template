@@ -67,3 +67,5 @@ pipeline:
                       spec:
                         connectorRef: <+input>
                         repo: <+input>
+  delegateSelectors:
+    - delegate-k8s-docacloud
