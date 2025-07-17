@@ -1,0 +1,42 @@
+template:
+  name: images scan
+  identifier: images_scan
+  versionLabel: v0.1
+  type: Stage
+  tags:
+    sécurité: ""
+    image scan: ""
+  icon: data:image/png;base64,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
+  spec:
+    type: SecurityTests
+    spec:
+      cloneCodebase: false
+      infrastructure:
+        type: KubernetesDirect
+        spec:
+          connectorRef: <+input>
+          namespace: <+input>.default(harness-ci)
+          automountServiceAccountToken: true
+          nodeSelector: {}
+          os: Linux
+      execution:
+        steps:
+          - step:
+              type: AquaTrivy
+              name: aquatrivy container
+              identifier: aquatrivy_container
+              spec:
+                mode: orchestration
+                config: default
+                target:
+                  type: container
+                  detection: auto
+                advanced:
+                  log:
+                    level: info
+                  fail_on_severity: none
+                privileged: true
+                image:
+                  type: docker_v2
+                  tag: latest
+                  name: stfgit/harness_generic_tests
