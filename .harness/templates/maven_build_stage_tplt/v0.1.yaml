@@ -170,6 +170,6 @@ template:
                 tags:
                   - <+pipeline.executionId>
                   - latest
-  description: maven, tests u, jacoco coverage, build et push docker
+  description: maven, tests u avec report, jacoco coverage, build et push docker
   identifier: maven_build_stage_tplt
   versionLabel: v0.1
