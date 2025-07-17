@@ -67,5 +67,20 @@ pipeline:
                       spec:
                         connectorRef: <+input>
                         repo: <+input>
+    - stage:
+        name: check images
+        identifier: check_images
+        template:
+          templateRef: account.images_scan
+          versionLabel: v0.1
+          gitBranch: main
+          templateInputs:
+            type: SecurityTests
+            spec:
+              infrastructure:
+                type: KubernetesDirect
+                spec:
+                  connectorRef: <+input>
+                  namespace: <+input>.default(harness-ci)
   delegateSelectors:
     - delegate-k8s-docacloud
