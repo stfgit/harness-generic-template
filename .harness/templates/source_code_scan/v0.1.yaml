@@ -14,7 +14,7 @@ template:
       infrastructure:
         type: KubernetesDirect
         spec:
-          connectorRef: account.k8sdocacloud
+          connectorRef: <+input>
           namespace: <+input>.default(harness-ci)
           automountServiceAccountToken: true
           nodeSelector: {}
