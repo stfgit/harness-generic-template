@@ -1,0 +1,93 @@
+inputSet:
+  pipeline:
+    identifier: check_stage_tplts
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: main
+    stages:
+      - stage:
+          identifier: check_sources
+          template:
+            templateInputs:
+              type: SecurityTests
+              spec:
+                infrastructure:
+                  type: KubernetesDirect
+                  spec:
+                    connectorRef: account.k8sdocacloud
+                    namespace: harness-delegate-ng
+      - stage:
+          identifier: build_and_push
+          template:
+            templateInputs:
+              type: CI
+              spec:
+                infrastructure:
+                  type: KubernetesDirect
+                  spec:
+                    connectorRef: account.k8sdocacloud
+                    namespace: harness-delegate-ng
+                execution:
+                  steps:
+                    - step:
+                        identifier: mvn_build
+                        type: Run
+                        spec:
+                          connectorRef: org.Dockerhub
+                          image: maven:3.9.6-eclipse-temurin-21
+                    - step:
+                        identifier: mvn_test_with_coverage
+                        type: Run
+                        spec:
+                          connectorRef: org.Dockerhub
+                          image: maven:3.9.6-eclipse-temurin-21
+                    - step:
+                        identifier: coverage_quality_gate
+                        type: Run
+                        spec:
+                          connectorRef: org.Dockerhub
+                    - step:
+                        identifier: build_and_push_docker_image
+                        type: BuildAndPushDockerRegistry
+                        spec:
+                          connectorRef: org.Dockerhub
+                          repo: stfgit/harness_generic_tests
+      - stage:
+          identifier: check_images
+          template:
+            templateInputs:
+              type: SecurityTests
+              spec:
+                infrastructure:
+                  type: KubernetesDirect
+                  spec:
+                    connectorRef: account.k8sdocacloud
+                    namespace: harness-delegate-ng
+      - stage:
+          identifier: rollout_deploy_dev
+          template:
+            templateInputs:
+              type: Deployment
+              spec:
+                environment:
+                  environmentRef: dev
+                  gitBranch: main
+                  infrastructureDefinitions:
+                    - identifier: infra_dev
+                      inputs:
+                        identifier: infra_dev
+                        type: KubernetesDirect
+                        spec:
+                          connectorRef: org.kubdesktop
+                          namespace: dev
+                service:
+                  serviceRef: mower_svc
+                  gitBranch: main
+  name: inputs wip
+  identifier: inputs_wip
+  orgIdentifier: stf
+  projectIdentifier: harness_generic_template
