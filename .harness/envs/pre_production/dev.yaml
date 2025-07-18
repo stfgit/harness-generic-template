@@ -1,6 +1,0 @@
-environment:
-  name: dev
-  identifier: dev
-  orgIdentifier: stf
-  projectIdentifier: harness_generic_template
-  type: PreProduction
