@@ -52,7 +52,7 @@ template:
                       fail_on_severity: high
                     resources:
                       limits:
-                        memory: 1.5Gi
+                        memory: 3Gi
                         cpu: 500m
               - step:
                   type: AquaTrivy
