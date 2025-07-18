@@ -7,8 +7,8 @@ pipeline:
   properties:
     ci:
       codebase:
-        connectorRef: org.gitstf
-        repoName: mower-java
+        connectorRef: account.Github
+        repoName: stfgit/harness-generic-template
         build: <+input>
         sparseCheckout: []
   stages:
@@ -82,5 +82,24 @@ pipeline:
                 spec:
                   connectorRef: <+input>
                   namespace: <+input>.default(harness-ci)
+    - stage:
+        name: rollout deploy dev
+        identifier: rollout_deploy_dev
+        tags: {}
+        template:
+          templateRef: account.deploy_k8s
+          versionLabel: v0.1
+          gitBranch: main
+          templateInputs:
+            type: Deployment
+            spec:
+              environment:
+                environmentRef: <+input>
+                environmentInputs: <+input>
+                serviceOverrideInputs: <+input>
+                infrastructureDefinitions: <+input>
+              service:
+                serviceRef: <+input>
+                serviceInputs: <+input>
   delegateSelectors:
     - delegate-k8s-docacloud
