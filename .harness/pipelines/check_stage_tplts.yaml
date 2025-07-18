@@ -83,7 +83,7 @@ pipeline:
                   connectorRef: <+input>
                   namespace: <+input>.default(harness-ci)
     - stage:
-        name: rollout deploy dev
+        name: rollout deploy
         identifier: rollout_deploy_dev
         tags: {}
         template:
