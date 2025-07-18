@@ -3,3 +3,24 @@ service:
   identifier: mower_svc
   orgIdentifier: stf
   projectIdentifier: harness_generic_template
+  serviceDefinition:
+    spec:
+      manifests:
+        - manifest:
+            identifier: jobmanifest
+            type: K8sManifest
+            spec:
+              store:
+                type: Github
+                spec:
+                  connectorRef: account.Github
+                  gitFetchType: Branch
+                  paths:
+                    - .harness/manifests
+                  repoName: stfgit/harness-generic-template
+                  branch: main
+              valuesPaths:
+                - .harness/manifests/values.yaml
+              skipResourceVersioning: false
+              enableDeclarativeRollback: false
+    type: Kubernetes
