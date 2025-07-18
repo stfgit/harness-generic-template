@@ -1,0 +1,5 @@
+service:
+  name: mower svc
+  identifier: mower_svc
+  orgIdentifier: stf
+  projectIdentifier: harness_generic_template
