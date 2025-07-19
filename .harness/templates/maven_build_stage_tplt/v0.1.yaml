@@ -33,8 +33,20 @@ template:
                   echo "Configuring Maven cache directory..."
                   mkdir -p /harness/.m2/repository
 
+                  echo "Checking for settings.xml..."
+                  if [ -f "settings.xml" ]; then
+                      echo "✅ settings.xml found in current directory"
+                      SETTINGS_ARG="-s settings.xml"
+                  elif [ -f "/harness/settings.xml" ]; then
+                      echo "✅ settings.xml found in /harness/"
+                      SETTINGS_ARG="-s /harness/settings.xml"
+                  else
+                      echo "⚠️  No settings.xml found, using Maven defaults"
+                      SETTINGS_ARG=""
+                  fi
+
                   echo "🔨 Starting Maven build..."
-                  mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -Dmaven.repo.local=/harness/.m2/repository -s settings.xml -B -V
+                  mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -Dmaven.repo.local=/harness/.m2/repository $SETTINGS_ARG -B -V
                   echo "✅ Maven build completed successfully"
 
                   # Afficher les artefacts créés
