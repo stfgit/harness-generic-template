@@ -17,7 +17,7 @@ service:
                   gitFetchType: Branch
                   paths:
                     - .harness/manifests
-                  repoName: stfgit/harness-generic-template
+                  repoName: stfgit/mower-java
                   branch: main
               valuesPaths:
                 - .harness/manifests/values.yaml
