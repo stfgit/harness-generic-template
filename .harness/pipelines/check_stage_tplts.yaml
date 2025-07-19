@@ -8,7 +8,7 @@ pipeline:
     ci:
       codebase:
         connectorRef: account.Github
-        repoName: stfgit/harness-generic-template
+        repoName: stfgit/mower
         build: <+input>
         sparseCheckout: []
   stages:
