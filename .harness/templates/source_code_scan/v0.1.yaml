@@ -23,20 +23,6 @@ template:
         steps:
           - parallel:
               - step:
-                  type: Semgrep
-                  name: semgrep
-                  identifier: semgrep
-                  spec:
-                    mode: orchestration
-                    config: default
-                    target:
-                      type: repository
-                      detection: auto
-                    advanced:
-                      log:
-                        level: info
-                      fail_on_severity: high
-              - step:
                   type: Owasp
                   name: owasp
                   identifier: owasp
@@ -69,3 +55,17 @@ template:
                         level: info
                       fail_on_severity: high
                     privileged: true
+              - step:
+                  type: Gitleaks
+                  name: gitleaks
+                  identifier: gitleaks
+                  spec:
+                    mode: orchestration
+                    config: default
+                    target:
+                      type: repository
+                      detection: auto
+                    advanced:
+                      log:
+                        level: info
+                      fail_on_severity: high
