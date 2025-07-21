@@ -54,5 +54,6 @@ template:
             - AllErrors
           action:
             type: StageRollback
+    delegateSelectors: <+input>
   identifier: deploy_k8s
   versionLabel: v0.1
