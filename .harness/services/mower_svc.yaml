@@ -23,4 +23,15 @@ service:
                 - .harness/manifests/values.yaml
               skipResourceVersioning: false
               enableDeclarativeRollback: false
+      artifacts:
+        primary:
+          primaryArtifactRef: <+input>
+          sources:
+            - spec:
+                connectorRef: org.Dockerhub
+                imagePath: stfgit/harness_generic_tests
+                tag: <+input>
+                digest: ""
+              identifier: mower
+              type: DockerRegistry
     type: Kubernetes
