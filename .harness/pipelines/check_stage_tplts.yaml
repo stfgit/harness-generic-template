@@ -101,5 +101,3 @@ pipeline:
               service:
                 serviceRef: <+input>
                 serviceInputs: <+input>
-  delegateSelectors:
-    - delegate-k8s-docacloud
