@@ -101,7 +101,6 @@ pipeline:
               service:
                 serviceRef: <+input>
                 serviceInputs: <+input>
-            delegateSelectors:
-              - helm-delegate
+            delegateSelectors: []
   delegateSelectors:
     - delegate-k8s-docacloud
