@@ -27,6 +27,7 @@ pipeline:
                 spec:
                   connectorRef: <+input>
                   namespace: <+input>.default(harness-ci)
+            delegateSelectors: <+input>
     - stage:
         name: build and push
         identifier: build_and_push
@@ -61,12 +62,14 @@ pipeline:
                       type: Run
                       spec:
                         connectorRef: <+input>
+                        image: <+input>.default(alpine:latest)
                   - step:
                       identifier: build_and_push_docker_image
                       type: BuildAndPushDockerRegistry
                       spec:
                         connectorRef: <+input>
                         repo: <+input>
+            delegateSelectors: <+input>
     - stage:
         name: check images
         identifier: check_images
@@ -82,6 +85,7 @@ pipeline:
                 spec:
                   connectorRef: <+input>
                   namespace: <+input>.default(harness-ci)
+            delegateSelectors: <+input>
     - stage:
         name: rollout deploy
         identifier: rollout_deploy_dev
