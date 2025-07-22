@@ -27,6 +27,7 @@ pipeline:
                 spec:
                   connectorRef: <+input>
                   namespace: <+input>.default(harness-ci)
+            delegateSelectors: <+input>
     - stage:
         name: build and push
         identifier: build_and_push
