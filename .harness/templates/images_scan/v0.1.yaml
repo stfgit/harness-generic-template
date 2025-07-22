@@ -39,3 +39,4 @@ template:
                   type: docker_v2
                   tag: latest
                   name: stfgit/harness_generic_tests
+    delegateSelectors: <+input>
