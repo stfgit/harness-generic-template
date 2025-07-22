@@ -141,7 +141,7 @@ template:
               identifier: coverage_quality_gate
               spec:
                 connectorRef: <+input>
-                image: <+runtime>.default(alpine:latest)
+                image: <+input>.default(alpine:latest)
                 shell: Sh
                 command: |-
                   # Installer bc pour les calculs (si pas disponible)
@@ -182,6 +182,7 @@ template:
                 tags:
                   - <+pipeline.executionId>
                   - latest
+    delegateSelectors: <+input>
   description: maven, tests u avec report, jacoco coverage, build et push docker
   identifier: maven_build_stage_tplt
   versionLabel: v0.1
