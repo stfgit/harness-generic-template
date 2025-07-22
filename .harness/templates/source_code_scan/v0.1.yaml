@@ -69,4 +69,3 @@ template:
                       log:
                         level: info
                       fail_on_severity: high
-    delegateSelectors: <+input>
