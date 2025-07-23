@@ -20,7 +20,7 @@ template:
                 issueType: <+input>
                 fields:
                   - name: Résumé
-                    value: Approbation demandée
+                    value: "Demande d'approbation pour déploiement PRODUCTION (version: <+pipeline.sequenceId>)"
                   - name: Type de ticket
                     value: Déploiement
           - step:
