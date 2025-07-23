@@ -159,5 +159,25 @@ pipeline:
                 serviceRef: <+input>
                 serviceInputs: <+input>
             delegateSelectors: <+input>
+    - stage:
+        name: jira approval
+        identifier: jira_approval
+        tags: {}
+        template:
+          templateRef: account.jira_approval
+          versionLabel: v0.1
+          gitBranch: main
+          templateInputs:
+            type: Approval
+            spec:
+              execution:
+                steps:
+                  - step:
+                      identifier: create_ticket
+                      type: JiraCreate
+                      spec:
+                        connectorRef: account.jira_stf_connector
+                        projectKey: NN
+                        issueType: Déploiement
   delegateSelectors:
     - delegate-k8s-docacloud
