@@ -38,8 +38,8 @@ template:
                       fail_on_severity: high
                     resources:
                       limits:
-                        memory: 2Gi
-                        cpu: 500m
+                        memory: <+input>.default(2Gi)
+                        cpu: <+input>.default(500m)
               - step:
                   type: AquaTrivy
                   name: aquatrivy
@@ -54,6 +54,10 @@ template:
                       log:
                         level: info
                       fail_on_severity: high
+                    resources:
+                      limits:
+                        memory: <+input>
+                        cpu: <+input>
                     privileged: true
               - step:
                   type: Gitleaks
@@ -69,4 +73,8 @@ template:
                       log:
                         level: info
                       fail_on_severity: high
+                    resources:
+                      limits:
+                        memory: <+input>
+                        cpu: <+input>
     delegateSelectors: <+input>
