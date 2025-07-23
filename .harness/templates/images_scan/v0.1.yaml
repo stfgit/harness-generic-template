@@ -34,6 +34,10 @@ template:
                   log:
                     level: info
                   fail_on_severity: none
+                resources:
+                  limits:
+                    memory: <+input>
+                    cpu: <+input>
                 privileged: true
                 image:
                   type: docker_v2
