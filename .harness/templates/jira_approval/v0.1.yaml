@@ -30,7 +30,7 @@ template:
               timeout: 1d
               spec:
                 connectorRef: <+stage.spec.execution.steps.create_ticket.spec.connectorRef>
-                issueKey: <+execution.steps.create_ticket.output.key>
+                issueKey: <+pipeline.stages.jira_approval.spec.execution.steps.create_ticket.issue.key>
                 approvalCriteria:
                   type: Jexl
                   spec:
