@@ -178,6 +178,6 @@ pipeline:
                       spec:
                         connectorRef: account.jira_stf_connector
                         projectKey: NN
-                        issueType: Déploiement
+                        issueType: Tâche
   delegateSelectors:
     - delegate-k8s-docacloud
