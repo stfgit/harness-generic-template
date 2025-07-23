@@ -52,6 +52,10 @@ template:
                   # Afficher les artefacts créés
                   echo "📦 Generated artifacts:"
                   ls -la target/*.jar 2>/dev/null || echo "No JAR files found"
+                resources:
+                  limits:
+                    memory: <+input>
+                    cpu: <+input>
           - step:
               type: Run
               name: mvn test with coverage
@@ -134,6 +138,10 @@ template:
                   - name: COVERAGE_PERCENT
                     type: String
                     value: LINE_PERCENT
+                resources:
+                  limits:
+                    memory: <+input>
+                    cpu: <+input>
               description: Uses Jacoco
           - step:
               type: Run
@@ -172,6 +180,10 @@ template:
                     echo "🚨 Deployment blocked - please improve test coverage"
                     exit 1
                   fi
+                resources:
+                  limits:
+                    memory: <+input>
+                    cpu: <+input>
           - step:
               type: BuildAndPushDockerRegistry
               name: build and push docker image
@@ -182,6 +194,10 @@ template:
                 tags:
                   - <+pipeline.executionId>
                   - latest
+                resources:
+                  limits:
+                    memory: <+input>
+                    cpu: <+input>
     delegateSelectors: <+input>
   description: maven, tests u avec report, jacoco coverage, build et push docker
   identifier: maven_build_stage_tplt
