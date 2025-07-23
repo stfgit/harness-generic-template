@@ -30,7 +30,7 @@ template:
               timeout: 1d
               spec:
                 connectorRef: <+stage.spec.execution.steps.create_ticket.spec.connectorRef>
-                issueKey: <+stage.spec.execution.steps.create_ticket.spec.issue.key>
+                issueKey: <+pipeline.stages.jira_approval.spec.execution.steps.create_ticket.issue.key>
                 approvalCriteria:
                   type: KeyValues
                   spec:
