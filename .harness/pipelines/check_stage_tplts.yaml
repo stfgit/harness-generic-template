@@ -27,6 +27,33 @@ pipeline:
                 spec:
                   connectorRef: <+input>
                   namespace: <+input>.default(harness-ci)
+              execution:
+                steps:
+                  - parallel:
+                      - step:
+                          identifier: owasp
+                          type: Owasp
+                          spec:
+                            resources:
+                              limits:
+                                memory: <+input>.default(2Gi)
+                                cpu: <+input>.default(500m)
+                      - step:
+                          identifier: aquatrivy
+                          type: AquaTrivy
+                          spec:
+                            resources:
+                              limits:
+                                memory: <+input>
+                                cpu: <+input>
+                      - step:
+                          identifier: gitleaks
+                          type: Gitleaks
+                          spec:
+                            resources:
+                              limits:
+                                memory: <+input>
+                                cpu: <+input>
             delegateSelectors: <+input>
     - stage:
         name: build and push
@@ -51,24 +78,40 @@ pipeline:
                       spec:
                         connectorRef: <+input>
                         image: <+input>.default(maven:3.9.6-eclipse-temurin-21)
+                        resources:
+                          limits:
+                            memory: <+input>
+                            cpu: <+input>
                   - step:
                       identifier: mvn_test_with_coverage
                       type: Run
                       spec:
                         connectorRef: <+input>
                         image: <+input>.default(maven:3.9.6-eclipse-temurin-21)
+                        resources:
+                          limits:
+                            memory: <+input>
+                            cpu: <+input>
                   - step:
                       identifier: coverage_quality_gate
                       type: Run
                       spec:
                         connectorRef: <+input>
                         image: <+input>.default(alpine:latest)
+                        resources:
+                          limits:
+                            memory: <+input>
+                            cpu: <+input>
                   - step:
                       identifier: build_and_push_docker_image
                       type: BuildAndPushDockerRegistry
                       spec:
                         connectorRef: <+input>
                         repo: <+input>
+                        resources:
+                          limits:
+                            memory: <+input>
+                            cpu: <+input>
             delegateSelectors: <+input>
     - stage:
         name: check images
@@ -85,6 +128,16 @@ pipeline:
                 spec:
                   connectorRef: <+input>
                   namespace: <+input>.default(harness-ci)
+              execution:
+                steps:
+                  - step:
+                      identifier: aquatrivy_container
+                      type: AquaTrivy
+                      spec:
+                        resources:
+                          limits:
+                            memory: <+input>
+                            cpu: <+input>
             delegateSelectors: <+input>
     - stage:
         name: rollout deploy
