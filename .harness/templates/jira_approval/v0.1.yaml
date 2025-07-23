@@ -1,0 +1,43 @@
+template:
+  name: jira approval
+  identifier: jira_approval
+  versionLabel: v0.1
+  type: Stage
+  tags: {}
+  spec:
+    type: Approval
+    spec:
+      execution:
+        steps:
+          - step:
+              name: create ticket
+              identifier: create_ticket
+              type: JiraCreate
+              timeout: 5m
+              spec:
+                connectorRef: <+input>
+                projectKey: <+input>
+                issueType: <+input>
+                fields:
+                  - name: Résumé
+                    value: Approbation demandée
+                  - name: Type de ticket
+                    value: Déploiement
+          - step:
+              name: jira approval
+              identifier: jira_approval
+              type: JiraApproval
+              timeout: 1d
+              spec:
+                connectorRef: <+stage.spec.execution.steps.create_ticket.spec.connectorRef>
+                issueKey: <+stage.spec.execution.steps.create_ticket.stage.spec.execution.steps.create_ticket.spec.issueKey>
+                approvalCriteria:
+                  type: KeyValues
+                  spec:
+                    matchAnyCondition: false
+                    conditions: []
+                rejectionCriteria:
+                  type: KeyValues
+                  spec:
+                    matchAnyCondition: false
+                    conditions: []
