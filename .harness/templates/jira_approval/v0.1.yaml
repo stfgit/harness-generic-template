@@ -35,9 +35,13 @@ template:
                   type: KeyValues
                   spec:
                     matchAnyCondition: false
-                    conditions: []
+                    conditions:
+                      - key: Status
+                        operator: equals
+                        value: Validé
                 rejectionCriteria:
                   type: KeyValues
                   spec:
                     matchAnyCondition: false
                     conditions: []
+                retryInterval: 1m
