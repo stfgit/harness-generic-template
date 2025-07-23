@@ -37,8 +37,8 @@ template:
                     matchAnyCondition: true
                     conditions:
                       - key: Status
-                        operator: equals
-                        value: "10807"
+                        operator: in
+                        value: Validé, VALIDÉ
                 rejectionCriteria:
                   type: KeyValues
                   spec:
