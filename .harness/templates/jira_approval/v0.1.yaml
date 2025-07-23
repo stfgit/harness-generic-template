@@ -34,14 +34,17 @@ template:
                 approvalCriteria:
                   type: KeyValues
                   spec:
-                    matchAnyCondition: false
+                    matchAnyCondition: true
                     conditions:
                       - key: Status
                         operator: equals
-                        value: Validé
+                        value: "10807"
                 rejectionCriteria:
                   type: KeyValues
                   spec:
                     matchAnyCondition: false
-                    conditions: []
+                    conditions:
+                      - key: Status
+                        operator: equals
+                        value: Roll back
                 retryInterval: 1m
