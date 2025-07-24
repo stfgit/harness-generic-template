@@ -3,7 +3,10 @@ template:
   identifier: jira_approval
   versionLabel: v0.1
   type: Stage
-  tags: {}
+  tags:
+    approbation: ""
+    jira: ""
+    ticket: ""
   spec:
     type: Approval
     spec:
