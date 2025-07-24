@@ -32,9 +32,13 @@ template:
                 connectorRef: <+stage.spec.execution.steps.create_ticket.spec.connectorRef>
                 issueKey: <+pipeline.stages.jira_approval.spec.execution.steps.create_ticket.issue.key>
                 approvalCriteria:
-                  type: Jexl
+                  type: KeyValues
                   spec:
-                    expression: <+issue.Status == "Validé">
+                    matchAnyCondition: true
+                    conditions:
+                      - key: status
+                        operator: equals
+                        value: Validé
                 rejectionCriteria:
                   type: KeyValues
                   spec:
