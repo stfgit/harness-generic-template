@@ -34,7 +34,7 @@ template:
                 approvalCriteria:
                   type: Jexl
                   spec:
-                    expression: <+issue.Status>.toLowerCase().contains("valid")
+                    expression: <+<+issue.Status>.toLowerCase().contains("valid")>
                 rejectionCriteria:
                   type: KeyValues
                   spec:
