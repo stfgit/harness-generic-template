@@ -1,0 +1,29 @@
+template:
+  name: manual approval
+  identifier: manual_approval
+  versionLabel: v0.1
+  type: Stage
+  tags:
+    approbation: ""
+  spec:
+    type: Approval
+    spec:
+      execution:
+        steps:
+          - step:
+              name: approval
+              identifier: approval
+              type: HarnessApproval
+              timeout: 1d
+              spec:
+                approvalMessage: Veuillez examiner les informations suivantes et approuver la progression du pipeline.
+                includePipelineExecutionHistory: true
+                approvers:
+                  minimumCount: <+input>.default(1)
+                  disallowPipelineExecutor: true
+                  userGroups: <+input>
+                isAutoRejectEnabled: true
+                approverInputs:
+                  - name: remarques
+                    defaultValue: ...
+    delegateSelectors: <+input>
