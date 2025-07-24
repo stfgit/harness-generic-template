@@ -180,7 +180,7 @@ pipeline:
                         projectKey: NN
                         issueType: Déploiement
   delegateSelectors:
-    - delegate-k8s-docacloud
+    - helm-delegate-k8s-fat
   notificationRules:
     - name: notifs
       identifier: notifs
