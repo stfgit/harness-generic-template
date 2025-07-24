@@ -25,7 +25,7 @@ pipeline:
               infrastructure:
                 type: KubernetesDirect
                 spec:
-                  connectorRef: <+input>
+                  connectorRef: account.k8sdocacloud
                   namespace: <+input>.default(harness-ci)
               execution:
                 steps:
@@ -68,7 +68,7 @@ pipeline:
               infrastructure:
                 type: KubernetesDirect
                 spec:
-                  connectorRef: <+input>
+                  connectorRef: account.k8sdocacloud
                   namespace: <+input>.default(harness-ci)
               execution:
                 steps:
@@ -76,7 +76,7 @@ pipeline:
                       identifier: mvn_build
                       type: Run
                       spec:
-                        connectorRef: <+input>
+                        connectorRef: org.Dockerhub
                         image: <+input>.default(maven:3.9.6-eclipse-temurin-21)
                         resources:
                           limits:
@@ -86,7 +86,7 @@ pipeline:
                       identifier: mvn_test_with_coverage
                       type: Run
                       spec:
-                        connectorRef: <+input>
+                        connectorRef: org.Dockerhub
                         image: <+input>.default(maven:3.9.6-eclipse-temurin-21)
                         resources:
                           limits:
@@ -96,8 +96,8 @@ pipeline:
                       identifier: coverage_quality_gate
                       type: Run
                       spec:
-                        connectorRef: <+input>
-                        image: <+input>.default(alpine:latest)
+                        connectorRef: org.Dockerhub
+                        image: alpine:latest
                         resources:
                           limits:
                             memory: <+input>
@@ -106,8 +106,8 @@ pipeline:
                       identifier: build_and_push_docker_image
                       type: BuildAndPushDockerRegistry
                       spec:
-                        connectorRef: <+input>
-                        repo: <+input>
+                        connectorRef: org.Dockerhub
+                        repo: stfgit/harness_generic_tests
                         resources:
                           limits:
                             memory: <+input>
@@ -126,7 +126,7 @@ pipeline:
               infrastructure:
                 type: KubernetesDirect
                 spec:
-                  connectorRef: <+input>
+                  connectorRef: account.k8sdocacloud
                   namespace: <+input>.default(harness-ci)
               execution:
                 steps:
