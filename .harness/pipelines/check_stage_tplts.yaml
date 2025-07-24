@@ -160,11 +160,11 @@ pipeline:
                 serviceInputs: <+input>
             delegateSelectors: <+input>
     - stage:
-        name: jira approval
-        identifier: jira_approval
+        name: approval
+        identifier: approval
         tags: {}
         template:
-          templateRef: account.jira_approval
+          templateRef: account.manual_approval
           versionLabel: v0.1
           gitBranch: main
           templateInputs:
@@ -173,12 +173,13 @@ pipeline:
               execution:
                 steps:
                   - step:
-                      identifier: create_ticket
-                      type: JiraCreate
+                      identifier: approval
+                      type: HarnessApproval
                       spec:
-                        connectorRef: account.jira_stf_connector
-                        projectKey: NN
-                        issueType: Déploiement
+                        approvers:
+                          minimumCount: <+input>.default(1)
+                          userGroups: <+input>.allowedValues(org.DevOps_Team)
+            delegateSelectors: <+input>
   delegateSelectors:
     - helm-delegate-k8s-fat
   notificationRules:
