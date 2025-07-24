@@ -181,3 +181,16 @@ pipeline:
                         issueType: Tâche
   delegateSelectors:
     - delegate-k8s-docacloud
+  notificationRules:
+    - name: notifs
+      identifier: notifs
+      pipelineEvents:
+        - type: PipelineSuccess
+        - type: PipelineFailed
+      notificationMethod:
+        type: Email
+        spec:
+          userGroups:
+            - org._organization_all_users
+          recipients: []
+      enabled: true
