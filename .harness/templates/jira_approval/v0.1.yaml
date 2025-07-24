@@ -24,6 +24,35 @@ template:
                   - name: Type de ticket
                     value: Déploiement
           - step:
+              type: ShellScript
+              name: ShellScript_1
+              identifier: ShellScript_1
+              spec:
+                shell: Bash
+                executionTarget: {}
+                source:
+                  type: Inline
+                  spec:
+                    script: |-
+                      - step:
+                          type: ShellScript  
+                          name: "Debug Status Value"
+                          spec:
+                            shell: Bash
+                            source:
+                              type: Inline
+                              spec:
+                                script: |
+                                  echo "=== DEBUG JIRA STATUS ==="
+                                  echo "Status value: '<+issue.Status>'"
+                                  echo "Status length: ${#<+issue.Status>}"
+                                  echo "Status as hex:"
+                                  echo "<+issue.Status>" | xxd
+                                  echo "========================="
+                environmentVariables: []
+                outputVariables: []
+              timeout: 10m
+          - step:
               name: jira approval
               identifier: jira_approval
               type: JiraApproval
