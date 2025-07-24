@@ -36,7 +36,7 @@ template:
                     script: |-
 
                       echo "=== DEBUG JIRA STATUS ==="
-                      echo "Status value: '<+issue.Status>'"
+                      echo "Status value: '<+issue.status>'"
                       echo "Status length: ${#<+issue.Status>}"
                       echo "Status as hex:"
                       echo "<+issue.Status>" | xxd
