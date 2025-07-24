@@ -22,7 +22,7 @@ template:
                   - name: Résumé
                     value: "Demande d'approbation pour déploiement PRODUCTION (version: <+pipeline.sequenceId>)"
                   - name: Type de ticket
-                    value: Tâche
+                    value: Déploiement
           - step:
               name: jira approval
               identifier: jira_approval
