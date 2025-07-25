@@ -78,7 +78,7 @@ pipeline:
                       type: Run
                       spec:
                         connectorRef: org.Dockerhub
-                        image: <+input>.default(maven:3.9.6-eclipse-temurin-21)
+                        image: maven:3.9.6-eclipse-temurin-21
                         resources:
                           limits:
                             memory: ""
@@ -88,7 +88,7 @@ pipeline:
                       type: Run
                       spec:
                         connectorRef: org.Dockerhub
-                        image: <+input>.default(maven:3.9.6-eclipse-temurin-21)
+                        image: maven:3.9.6-eclipse-temurin-21
                         resources:
                           limits:
                             memory: ""
