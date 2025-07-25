@@ -1,5 +1,5 @@
 template:
-  name: npm build
+  name: npm build and push docker
   identifier: npm_build
   versionLabel: v0.1
   type: Stage
