@@ -6,7 +6,7 @@ pipeline:
     ci:
       codebase:
         connectorRef: account.Github
-        repoName: stfgit/mower-java
+        repoName: stfgit/nextly
         build: <+input>
         sparseCheckout: []
   stages:
@@ -58,7 +58,7 @@ pipeline:
         name: build and push
         identifier: build_and_push
         template:
-          templateRef: account.maven_build_stage_tplt
+          templateRef: account.npm_build
           versionLabel: v0.1
           gitBranch: main
           templateInputs:
@@ -67,52 +67,45 @@ pipeline:
               infrastructure:
                 type: KubernetesDirect
                 spec:
-                  connectorRef: account.k8sdocacloud
-                  namespace: harness-ci
+                  namespace: <+input>.default(harness-ci)
               execution:
                 steps:
                   - step:
-                      identifier: mvn_build
+                      identifier: Install_Dependencies
                       type: Run
                       spec:
                         connectorRef: org.Dockerhub
-                        image: maven:3.9.6-eclipse-temurin-21
-                        resources:
-                          limits:
-                            memory: ""
-                            cpu: ""
+                        image: node:20
                   - step:
-                      identifier: mvn_test_with_coverage
+                      identifier: ESLint_Check
                       type: Run
                       spec:
                         connectorRef: org.Dockerhub
-                        image: maven:3.9.6-eclipse-temurin-21
-                        resources:
-                          limits:
-                            memory: ""
-                            cpu: ""
+                        image: node:20
                   - step:
-                      identifier: coverage_quality_gate
+                      identifier: Build_Application
                       type: Run
                       spec:
                         connectorRef: org.Dockerhub
-                        image: alpine:latest
-                        resources:
-                          limits:
-                            memory: ""
-                            cpu: ""
+                        image: node:20
                   - step:
-                      identifier: build_and_push_docker_image
+                      identifier: Unit_Tests
+                      type: Run
+                      spec:
+                        connectorRef: org.Dockerhub
+                        image: node:20
+                  - step:
+                      identifier: NPM_Audit
+                      type: Run
+                      spec:
+                        connectorRef: org.Dockerhub
+                        image: node:20
+                  - step:
+                      identifier: BuildAndPushDockerRegistry_1
                       type: BuildAndPushDockerRegistry
                       spec:
                         connectorRef: org.Dockerhub
-                        repo: stfgit/harness_generic_tests
-                        resources:
-                          limits:
-                            memory: ""
-                            cpu: ""
-            delegateSelectors:
-              - ""
+                        repo: stfgit/nextly
     - stage:
         name: check images
         identifier: check_images
