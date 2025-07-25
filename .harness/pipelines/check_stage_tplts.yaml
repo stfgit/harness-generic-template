@@ -230,6 +230,9 @@ pipeline:
       pipelineEvents:
         - type: PipelineSuccess
         - type: PipelineFailed
+        - type: StageStart
+          forStages:
+            - approval
       notificationMethod:
         type: Email
         spec:
