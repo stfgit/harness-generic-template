@@ -44,17 +44,18 @@ pipeline:
                           spec:
                             resources:
                               limits:
-                                memory: <+input>
-                                cpu: <+input>
+                                memory: ""
+                                cpu: ""
                       - step:
                           identifier: gitleaks
                           type: Gitleaks
                           spec:
                             resources:
                               limits:
-                                memory: <+input>
-                                cpu: <+input>
-            delegateSelectors: <+input>
+                                memory: ""
+                                cpu: ""
+            delegateSelectors:
+              - ""
     - stage:
         name: build and push
         identifier: build_and_push
@@ -80,8 +81,8 @@ pipeline:
                         image: <+input>.default(maven:3.9.6-eclipse-temurin-21)
                         resources:
                           limits:
-                            memory: <+input>
-                            cpu: <+input>
+                            memory: ""
+                            cpu: ""
                   - step:
                       identifier: mvn_test_with_coverage
                       type: Run
@@ -90,8 +91,8 @@ pipeline:
                         image: <+input>.default(maven:3.9.6-eclipse-temurin-21)
                         resources:
                           limits:
-                            memory: <+input>
-                            cpu: <+input>
+                            memory: ""
+                            cpu: ""
                   - step:
                       identifier: coverage_quality_gate
                       type: Run
@@ -100,8 +101,8 @@ pipeline:
                         image: alpine:latest
                         resources:
                           limits:
-                            memory: <+input>
-                            cpu: <+input>
+                            memory: ""
+                            cpu: ""
                   - step:
                       identifier: build_and_push_docker_image
                       type: BuildAndPushDockerRegistry
@@ -110,9 +111,10 @@ pipeline:
                         repo: stfgit/harness_generic_tests
                         resources:
                           limits:
-                            memory: <+input>
-                            cpu: <+input>
-            delegateSelectors: <+input>
+                            memory: ""
+                            cpu: ""
+            delegateSelectors:
+              - ""
     - stage:
         name: check images
         identifier: check_images
@@ -136,9 +138,10 @@ pipeline:
                       spec:
                         resources:
                           limits:
-                            memory: <+input>
-                            cpu: <+input>
-            delegateSelectors: <+input>
+                            memory: ""
+                            cpu: ""
+            delegateSelectors:
+              - ""
     - stage:
         name: rollout deploy dev
         identifier: rollout_deploy_dev
@@ -196,7 +199,8 @@ pipeline:
                         approvers:
                           minimumCount: <+input>.default(1)
                           userGroups: <+input>.allowedValues(org.DevOps_Team)
-            delegateSelectors: <+input>
+            delegateSelectors:
+              - ""
     - stage:
         name: rollout deploy prod
         identifier: prod_rollout_deploy
