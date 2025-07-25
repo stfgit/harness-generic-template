@@ -33,7 +33,7 @@ template:
                 advanced:
                   log:
                     level: info
-                  fail_on_severity: none
+                  fail_on_severity: <+input>
                 resources:
                   limits:
                     memory: <+input>
