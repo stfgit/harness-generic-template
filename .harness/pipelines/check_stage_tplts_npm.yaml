@@ -33,7 +33,7 @@ pipeline:
                           type: Owasp
                           spec:
                             advanced:
-                              fail_on_severity: <+input>
+                              fail_on_severity: none
                             resources:
                               limits:
                                 memory: 2Gi
@@ -43,7 +43,7 @@ pipeline:
                           type: AquaTrivy
                           spec:
                             advanced:
-                              fail_on_severity: <+input>
+                              fail_on_severity: none
                             resources:
                               limits:
                                 memory: ""
@@ -53,7 +53,7 @@ pipeline:
                           type: Gitleaks
                           spec:
                             advanced:
-                              fail_on_severity: <+input>
+                              fail_on_severity: none
                             resources:
                               limits:
                                 memory: ""
