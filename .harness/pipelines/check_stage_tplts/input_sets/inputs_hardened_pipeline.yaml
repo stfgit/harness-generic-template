@@ -1,0 +1,84 @@
+inputSet:
+  pipeline:
+    identifier: check_stage_tplts
+    properties:
+      ci:
+        codebase:
+          build:
+            spec:
+              branch: main
+            type: branch
+    stages:
+      - stage:
+          identifier: check_sources
+          template:
+            templateInputs:
+              type: SecurityTests
+              spec:
+                infrastructure:
+                  type: KubernetesDirect
+                  spec:
+                    namespace: harness-delegate-ng
+                execution:
+                  steps:
+                    - parallel:
+                        - step:
+                            identifier: owasp
+                            type: Owasp
+                            spec:
+                              resources:
+                                limits:
+                                  memory: 2Gi
+                                  cpu: 500m
+      - stage:
+          identifier: build_and_push
+          template:
+            templateInputs:
+              type: CI
+              spec:
+                infrastructure:
+                  type: KubernetesDirect
+                  spec:
+                    namespace: harness-delegate-ng
+                execution:
+                  steps:
+                    - step:
+                        identifier: mvn_build
+                        type: Run
+                        spec:
+                          image: maven:3.9.6-eclipse-temurin-21
+                    - step:
+                        identifier: mvn_test_with_coverage
+                        type: Run
+                        spec:
+                          image: maven:3.9.6-eclipse-temurin-21
+      - stage:
+          identifier: check_images
+          template:
+            templateInputs:
+              type: SecurityTests
+              spec:
+                infrastructure:
+                  type: KubernetesDirect
+                  spec:
+                    namespace: harness-delegate-ng
+      - stage:
+          identifier: approval
+          template:
+            templateInputs:
+              type: Approval
+              spec:
+                execution:
+                  steps:
+                    - step:
+                        identifier: approval
+                        type: HarnessApproval
+                        spec:
+                          approvers:
+                            minimumCount: 1
+                            userGroups:
+                              - org.DevOps_Team
+  name: inputs hardened pipeline
+  identifier: inputs_hardened_pipeline
+  orgIdentifier: stf
+  projectIdentifier: harness_generic_template
