@@ -32,6 +32,8 @@ pipeline:
                           identifier: owasp
                           type: Owasp
                           spec:
+                            advanced:
+                              fail_on_severity: <+input>
                             resources:
                               limits:
                                 memory: 2Gi
@@ -40,6 +42,8 @@ pipeline:
                           identifier: aquatrivy
                           type: AquaTrivy
                           spec:
+                            advanced:
+                              fail_on_severity: <+input>
                             resources:
                               limits:
                                 memory: ""
@@ -48,6 +52,8 @@ pipeline:
                           identifier: gitleaks
                           type: Gitleaks
                           spec:
+                            advanced:
+                              fail_on_severity: <+input>
                             resources:
                               limits:
                                 memory: ""
@@ -205,9 +211,9 @@ pipeline:
             spec:
               environment:
                 environmentRef: prod
-                gitBranch: main
                 infrastructureDefinitions:
                   - identifier: infra_prod
+                gitBranch: main
               service:
                 useFromStage:
                   stage: rollout_deploy_dev
