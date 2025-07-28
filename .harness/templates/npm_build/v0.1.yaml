@@ -6,7 +6,7 @@ template:
   tags:
     npm: ""
     build: ""
-    push docker: ""
+    docker: ""
   spec:
     type: CI
     spec:
