@@ -29,7 +29,6 @@ template:
                 image: <+input>.default(maven:3.9.6-eclipse-temurin-21)
                 shell: <+input>
                 command: |-
-                  <+input>.default(
                   echo "Configuring Maven cache directory..."
                   mkdir -p /harness/.m2/repository
 
@@ -52,7 +51,6 @@ template:
                   # Afficher les artefacts créés
                   echo "📦 Generated artifacts:"
                   ls -la target/*.jar 2>/dev/null || echo "No JAR files found"
-                  )
                 resources:
                   limits:
                     memory: <+input>
@@ -66,7 +64,6 @@ template:
                 image: <+input>.default(maven:3.9.6-eclipse-temurin-21)
                 shell: <+input>
                 command: |-
-                  <+input>.default(
                   echo "🧪 Running tests with JaCoCo coverage..."
 
                   mvn test jacoco:report -B -Dmaven.repo.local=/harness/.m2/repository -s settings.xml
@@ -131,7 +128,6 @@ template:
                     echo "⚠️ JaCoCo report directory not found"
                     mvn jacoco:help -Ddetail=true
                   fi
-                  )
                 reports:
                   type: JUnit
                   spec:
@@ -155,7 +151,6 @@ template:
                 image: <+input>.default(alpine:latest)
                 shell: <+input>
                 command: |-
-                  <+input>.default(
                   apk add --no-cache bc >/dev/null 2>&1 || true
 
                   echo "🎯 COVERAGE QUALITY GATE"
@@ -183,7 +178,6 @@ template:
                     echo "🚨 Deployment blocked - please improve test coverage"
                     exit 1
                   fi
-                  )
                 resources:
                   limits:
                     memory: <+input>
