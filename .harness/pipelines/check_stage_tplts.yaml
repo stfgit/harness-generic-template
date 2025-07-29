@@ -85,6 +85,32 @@ pipeline:
                       spec:
                         connectorRef: org.Dockerhub
                         image: maven:3.9.6-eclipse-temurin-21
+                        shell: <+input>
+                        command: |-
+                          <+input>.default(
+                          echo "Configuring Maven cache directory..."
+                          mkdir -p /harness/.m2/repository
+
+                          echo "Checking for settings.xml..."
+                          if [ -f "settings.xml" ]; then
+                              echo "✅ settings.xml found in current directory"
+                              SETTINGS_ARG="-s settings.xml"
+                          elif [ -f "/harness/settings.xml" ]; then
+                              echo "✅ settings.xml found in /harness/"
+                              SETTINGS_ARG="-s /harness/settings.xml"
+                          else
+                              echo "⚠️  No settings.xml found, using Maven defaults"
+                              SETTINGS_ARG=""
+                          fi
+
+                          echo "🔨 Starting Maven build..."
+                          mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -Dmaven.repo.local=/harness/.m2/repository $SETTINGS_ARG -B -V
+                          echo "✅ Maven build completed successfully"
+
+                          # Afficher les artefacts créés
+                          echo "📦 Generated artifacts:"
+                          ls -la target/*.jar 2>/dev/null || echo "No JAR files found"
+                          )
                         resources:
                           limits:
                             memory: ""
@@ -95,6 +121,74 @@ pipeline:
                       spec:
                         connectorRef: org.Dockerhub
                         image: maven:3.9.6-eclipse-temurin-21
+                        shell: <+input>
+                        command: |-
+                          <+input>.default(
+                          echo "🧪 Running tests with JaCoCo coverage..."
+
+                          mvn test jacoco:report -B -Dmaven.repo.local=/harness/.m2/repository -s settings.xml
+
+                          if [ -d "target/site/jacoco" ]; then
+                            echo "📈 Coverage Summary:"
+                            if [ -f target/site/jacoco/jacoco.csv ]; then
+                              echo "🔍 Analyzing JaCoCo CSV..."
+                              
+                              # Sommer toutes les lignes (sauf l'en-tête)
+                              # Colonnes: 8=LINE_MISSED, 9=LINE_COVERED
+                              TOTALS=$(awk -F',' '
+                                BEGIN { missed=0; covered=0 }
+                                NR>1 { 
+                                  # Nettoyer les retours chariot et sommer
+                                  gsub(/\r/, "", $8); gsub(/\r/, "", $9)
+                                  if ($8 ~ /^[0-9]+$/) missed += $8
+                                  if ($9 ~ /^[0-9]+$/) covered += $9
+                                }
+                                END { print missed "," covered }
+                              ' target/site/jacoco/jacoco.csv)
+                              
+                              LINE_MISSED=$(echo "$TOTALS" | cut -d',' -f1)
+                              LINE_COVERED=$(echo "$TOTALS" | cut -d',' -f2)
+                              LINE_TOTAL=$((LINE_MISSED + LINE_COVERED))
+
+                              echo "📊 Coverage calculation:"
+                              echo "   Lines missed: $LINE_MISSED"
+                              echo "   Lines covered: $LINE_COVERED"  
+                              echo "   Total lines: $LINE_TOTAL"
+
+                              if [ "$LINE_TOTAL" -gt 0 ]; then
+                                LINE_PERCENT=$(awk -v covered="$LINE_COVERED" -v total="$LINE_TOTAL" \
+                                  'BEGIN { printf("%.1f", total>0 ? covered*100/total : 0) }')
+                                echo "📊 Line Coverage: ${LINE_PERCENT}% ($LINE_COVERED/$LINE_TOTAL lines)"
+                                
+                                # Affichage par classe pour debug
+                                echo ""
+                                echo "📋 Coverage by class:"
+                                awk -F',' 'NR>1 { 
+                                  gsub(/\r/, "", $8); gsub(/\r/, "", $9)
+                                  if ($8 ~ /^[0-9]+$/ && $9 ~ /^[0-9]+$/) {
+                                    total = $8 + $9
+                                    if (total > 0) {
+                                      percent = $9 * 100 / total
+                                      printf("   %-30s: %5.1f%% (%d/%d)\n", $3, percent, $9, total)
+                                    }
+                                  }
+                                }' target/site/jacoco/jacoco.csv
+                                
+                              else
+                                echo "❌ No lines found for coverage calculation"
+                                LINE_PERCENT="0.0"
+                              fi
+                              
+                              echo ""
+                              echo "🔍 Manual verification:"
+                              echo "Calculated result: ${LINE_PERCENT}% (${LINE_COVERED}/${LINE_TOTAL} lines)"
+                              
+                            fi
+                          else
+                            echo "⚠️ JaCoCo report directory not found"
+                            mvn jacoco:help -Ddetail=true
+                          fi
+                          )
                         resources:
                           limits:
                             memory: ""
@@ -105,6 +199,37 @@ pipeline:
                       spec:
                         connectorRef: org.Dockerhub
                         image: alpine:latest
+                        shell: <+input>
+                        command: |-
+                          <+input>.default(
+                          apk add --no-cache bc >/dev/null 2>&1 || true
+
+                          echo "🎯 COVERAGE QUALITY GATE"
+                          echo "======================="
+
+                          # Récupérer la variable de l'étape précédente
+                          COVERAGE="<+stage.spec.execution.steps.mvn_test_with_coverage.output.outputVariables.COVERAGE_PERCENT>"
+
+                          echo "📊 Current Coverage: ${COVERAGE}%"
+
+                          # seuils
+                          MIN_COVERAGE=70
+                          TARGET_COVERAGE=80
+
+                          # Vérification
+                          if [ "$(echo "${COVERAGE} >= ${TARGET_COVERAGE}" | bc -l)" -eq 1 ]; then
+                            echo "🎉 EXCELLENT! Coverage ${COVERAGE}% exceeds target ${TARGET_COVERAGE}%"
+                            exit 0
+                          elif [ "$(echo "${COVERAGE} >= ${MIN_COVERAGE}" | bc -l)" -eq 1 ]; then
+                            echo "✅ PASS! Coverage ${COVERAGE}% meets minimum ${MIN_COVERAGE}%"
+                            echo "💡 Try to reach target ${TARGET_COVERAGE}% for excellent quality"
+                            exit 0
+                          else
+                            echo "❌ FAIL! Coverage ${COVERAGE}% below minimum ${MIN_COVERAGE}%"
+                            echo "🚨 Deployment blocked - please improve test coverage"
+                            exit 1
+                          fi
+                          )
                         resources:
                           limits:
                             memory: ""
