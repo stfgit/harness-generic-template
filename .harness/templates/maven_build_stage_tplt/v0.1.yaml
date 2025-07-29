@@ -27,7 +27,7 @@ template:
               spec:
                 connectorRef: <+input>
                 image: <+input>.default(maven:3.9.6-eclipse-temurin-21)
-                shell: <+input>
+                shell: Sh
                 command: |-
                   echo "Configuring Maven cache directory..."
                   mkdir -p /harness/.m2/repository
@@ -62,7 +62,7 @@ template:
               spec:
                 connectorRef: <+input>
                 image: <+input>.default(maven:3.9.6-eclipse-temurin-21)
-                shell: <+input>
+                shell: Sh
                 command: |-
                   echo "🧪 Running tests with JaCoCo coverage..."
 
@@ -149,7 +149,7 @@ template:
               spec:
                 connectorRef: <+input>
                 image: <+input>.default(alpine:latest)
-                shell: <+input>
+                shell: Sh
                 command: |-
                   apk add --no-cache bc >/dev/null 2>&1 || true
 
