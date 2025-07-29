@@ -85,7 +85,6 @@ pipeline:
                       spec:
                         connectorRef: org.Dockerhub
                         image: maven:3.9.6-eclipse-temurin-21
-                        shell: <+input>
                         resources:
                           limits:
                             memory: ""
@@ -96,7 +95,6 @@ pipeline:
                       spec:
                         connectorRef: org.Dockerhub
                         image: maven:3.9.6-eclipse-temurin-21
-                        shell: <+input>
                         resources:
                           limits:
                             memory: ""
@@ -107,7 +105,6 @@ pipeline:
                       spec:
                         connectorRef: org.Dockerhub
                         image: alpine:latest
-                        shell: <+input>
                         resources:
                           limits:
                             memory: ""
