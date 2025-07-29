@@ -28,7 +28,7 @@ template:
               spec:
                 connectorRef: <+input>
                 image: <+input>.default(node:20)
-                shell: <+input>
+                shell: Sh
                 command: |-
                   echo "Installation des dépendances Next.js..."
                   npm cache clean --force
@@ -43,7 +43,7 @@ template:
               spec:
                 connectorRef: <+input>
                 image: <+input>.default(node:20)
-                shell: <+input>
+                shell: Sh
                 command: |-
                   echo "Exécution du linting..."
                   npm run lint
@@ -55,7 +55,7 @@ template:
               spec:
                 connectorRef: <+input>
                 image: <+input>.default(node:20)
-                shell: <+input>
+                shell: Sh
                 command: |-
                   echo "Construction de l'application Next.js..."
                   npm run build
@@ -68,7 +68,7 @@ template:
               spec:
                 connectorRef: <+input>
                 image: <+input>.default(node:20)
-                shell: <+input>
+                shell: Sh
                 command: |-
                   echo "Exécution des tests unitaires..."
                   npm run test:ci || echo "Tests a implementer"
@@ -79,7 +79,7 @@ template:
               spec:
                 connectorRef: <+input>
                 image: <+input>.default(node:20)
-                shell: <+input>
+                shell: Sh
                 command: |-
                   echo "Audit de sécurité des dépendances npm..."
                   npm audit --audit-level=high || true
