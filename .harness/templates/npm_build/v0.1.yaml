@@ -28,14 +28,16 @@ template:
               spec:
                 connectorRef: <+input>
                 image: <+input>.default(node:20)
-                shell: Sh
+                shell: <+input>
                 command: |-
+                  <+input>.default(
                   echo "Installation des dépendances Next.js..."
                   npm cache clean --force
                   npm install --prefer-offline --no-audit --no-fund
                   echo "Vérification installation..."
                   npx next --version
                   echo "Dépendances installées avec succès"
+                  )
           - step:
               type: Run
               name: ESLint Check
@@ -43,11 +45,13 @@ template:
               spec:
                 connectorRef: <+input>
                 image: <+input>.default(node:20)
-                shell: Sh
+                shell: <+input>
                 command: |-
+                  <+input>.default(
                   echo "Exécution du linting..."
                   npm run lint
                   echo "Linting terminé"
+                  )
           - step:
               type: Run
               name: Build Application
@@ -55,12 +59,14 @@ template:
               spec:
                 connectorRef: <+input>
                 image: <+input>.default(node:20)
-                shell: Sh
+                shell: <+input>
                 command: |-
+                  <+runtime>.default(
                   echo "Construction de l'application Next.js..."
                   npm run build
                   echo "Build terminé avec succès"
                   ls -la .next/
+                  )
           - step:
               type: Run
               name: Unit Tests
@@ -68,10 +74,12 @@ template:
               spec:
                 connectorRef: <+input>
                 image: <+input>.default(node:20)
-                shell: Sh
+                shell: <+input>
                 command: |-
+                  <+input>.default(
                   echo "Exécution des tests unitaires..."
                   npm run test:ci || echo "Tests a implementer"
+                  )
           - step:
               type: Run
               name: NPM Audit
@@ -79,11 +87,13 @@ template:
               spec:
                 connectorRef: <+input>
                 image: <+input>.default(node:20)
-                shell: Sh
+                shell: <+input>
                 command: |-
+                  <+input>.default(
                   echo "Audit de sécurité des dépendances npm..."
                   npm audit --audit-level=high || true
                   echo "Audit npm terminé"
+                  )
           - step:
               type: BuildAndPushDockerRegistry
               name: Build and Push Docker Image
