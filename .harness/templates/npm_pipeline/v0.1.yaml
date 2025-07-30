@@ -9,7 +9,9 @@ template:
       ci:
         codebase:
           connectorRef: <+input>
+          repoName: <+input>
           build: <+input>
+          sparseCheckout: []
     stages:
       - stage:
           name: scan sources
@@ -144,8 +146,47 @@ template:
                               cpu: <+input>
               delegateSelectors: <+input>
       - stage:
-          name: deploy
+          name: deploy dev
           identifier: deploy
+          tags: {}
+          template:
+            templateRef: account.deploy_k8s
+            versionLabel: v0.1
+            templateInputs:
+              type: Deployment
+              spec:
+                environment:
+                  environmentRef: <+input>
+                  environmentInputs: <+input>
+                  serviceOverrideInputs: <+input>
+                  infrastructureDefinitions: <+input>
+                service:
+                  serviceRef: <+input>
+                  serviceInputs: <+input>
+              delegateSelectors: <+input>
+      - stage:
+          name: mep approval
+          identifier: mep_approval
+          tags: {}
+          template:
+            templateRef: account.manual_approval
+            versionLabel: v0.1
+            templateInputs:
+              type: Approval
+              spec:
+                execution:
+                  steps:
+                    - step:
+                        identifier: approval
+                        type: HarnessApproval
+                        spec:
+                          approvers:
+                            minimumCount: <+input>.default(1)
+                            userGroups: <+input>
+              delegateSelectors: <+input>
+      - stage:
+          name: deploy prod
+          identifier: deploy_prod
           tags: {}
           template:
             templateRef: account.deploy_k8s
