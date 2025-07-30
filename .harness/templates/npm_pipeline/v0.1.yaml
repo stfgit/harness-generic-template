@@ -3,7 +3,9 @@ template:
   identifier: npm_pipeline
   versionLabel: v0.1
   type: Pipeline
-  tags: {}
+  tags:
+    npm: ""
+    docker: ""
   spec:
     properties:
       ci:
@@ -62,10 +64,10 @@ template:
                                   cpu: <+input>
               delegateSelectors: <+input>
       - stage:
-          name: maven build and push
-          identifier: maven_build_and_push
+          name: npm build and push
+          identifier: npm_build_and_push
           template:
-            templateRef: account.maven_build_stage_tplt
+            templateRef: account.npm_build
             versionLabel: v0.1
             templateInputs:
               type: CI
@@ -78,46 +80,41 @@ template:
                 execution:
                   steps:
                     - step:
-                        identifier: mvn_build
+                        identifier: Install_Dependencies
                         type: Run
                         spec:
                           connectorRef: <+input>
-                          image: <+input>.default(maven:3.9.6-eclipse-temurin-21)
-                          resources:
-                            limits:
-                              memory: <+input>
-                              cpu: <+input>
+                          image: <+input>.default(node:20)
                     - step:
-                        identifier: mvn_test_with_coverage
+                        identifier: ESLint_Check
                         type: Run
                         spec:
                           connectorRef: <+input>
-                          image: <+input>.default(maven:3.9.6-eclipse-temurin-21)
-                          resources:
-                            limits:
-                              memory: <+input>
-                              cpu: <+input>
+                          image: <+input>.default(node:20)
                     - step:
-                        identifier: coverage_quality_gate
+                        identifier: Build_Application
                         type: Run
                         spec:
                           connectorRef: <+input>
-                          image: <+input>.default(alpine:latest)
-                          resources:
-                            limits:
-                              memory: <+input>
-                              cpu: <+input>
+                          image: <+input>.default(node:20)
                     - step:
-                        identifier: build_and_push_docker_image
+                        identifier: Unit_Tests
+                        type: Run
+                        spec:
+                          connectorRef: <+input>
+                          image: <+input>.default(node:20)
+                    - step:
+                        identifier: NPM_Audit
+                        type: Run
+                        spec:
+                          connectorRef: <+input>
+                          image: <+input>.default(node:20)
+                    - step:
+                        identifier: BuildAndPushDockerRegistry_1
                         type: BuildAndPushDockerRegistry
                         spec:
                           connectorRef: <+input>
                           repo: <+input>
-                          resources:
-                            limits:
-                              memory: <+input>
-                              cpu: <+input>
-              delegateSelectors: <+input>
       - stage:
           name: scan images
           identifier: scan_images
