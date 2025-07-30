@@ -1,0 +1,164 @@
+template:
+  name: npm pipeline
+  identifier: npm_pipeline
+  versionLabel: v0.1
+  type: Pipeline
+  tags: {}
+  spec:
+    properties:
+      ci:
+        codebase:
+          connectorRef: <+input>
+          build: <+input>
+    stages:
+      - stage:
+          name: scan sources
+          identifier: scan_sources
+          template:
+            templateRef: account.source_code_scan
+            versionLabel: v0.1
+            templateInputs:
+              type: SecurityTests
+              spec:
+                infrastructure:
+                  type: KubernetesDirect
+                  spec:
+                    connectorRef: <+input>
+                    namespace: <+input>.default(harness-ci)
+                execution:
+                  steps:
+                    - parallel:
+                        - step:
+                            identifier: owasp
+                            type: Owasp
+                            spec:
+                              advanced:
+                                fail_on_severity: <+input>
+                              resources:
+                                limits:
+                                  memory: <+input>.default(2Gi)
+                                  cpu: <+input>.default(500m)
+                        - step:
+                            identifier: aquatrivy
+                            type: AquaTrivy
+                            spec:
+                              advanced:
+                                fail_on_severity: <+input>
+                              resources:
+                                limits:
+                                  memory: <+input>
+                                  cpu: <+input>
+                        - step:
+                            identifier: gitleaks
+                            type: Gitleaks
+                            spec:
+                              advanced:
+                                fail_on_severity: <+input>
+                              resources:
+                                limits:
+                                  memory: <+input>
+                                  cpu: <+input>
+              delegateSelectors: <+input>
+      - stage:
+          name: maven build and push
+          identifier: maven_build_and_push
+          template:
+            templateRef: account.maven_build_stage_tplt
+            versionLabel: v0.1
+            templateInputs:
+              type: CI
+              spec:
+                infrastructure:
+                  type: KubernetesDirect
+                  spec:
+                    connectorRef: <+input>
+                    namespace: <+input>.default(harness-ci)
+                execution:
+                  steps:
+                    - step:
+                        identifier: mvn_build
+                        type: Run
+                        spec:
+                          connectorRef: <+input>
+                          image: <+input>.default(maven:3.9.6-eclipse-temurin-21)
+                          resources:
+                            limits:
+                              memory: <+input>
+                              cpu: <+input>
+                    - step:
+                        identifier: mvn_test_with_coverage
+                        type: Run
+                        spec:
+                          connectorRef: <+input>
+                          image: <+input>.default(maven:3.9.6-eclipse-temurin-21)
+                          resources:
+                            limits:
+                              memory: <+input>
+                              cpu: <+input>
+                    - step:
+                        identifier: coverage_quality_gate
+                        type: Run
+                        spec:
+                          connectorRef: <+input>
+                          image: <+input>.default(alpine:latest)
+                          resources:
+                            limits:
+                              memory: <+input>
+                              cpu: <+input>
+                    - step:
+                        identifier: build_and_push_docker_image
+                        type: BuildAndPushDockerRegistry
+                        spec:
+                          connectorRef: <+input>
+                          repo: <+input>
+                          resources:
+                            limits:
+                              memory: <+input>
+                              cpu: <+input>
+              delegateSelectors: <+input>
+      - stage:
+          name: scan images
+          identifier: scan_images
+          template:
+            templateRef: account.images_scan
+            versionLabel: v0.1
+            templateInputs:
+              type: SecurityTests
+              spec:
+                infrastructure:
+                  type: KubernetesDirect
+                  spec:
+                    connectorRef: <+input>
+                    namespace: <+input>.default(harness-ci)
+                execution:
+                  steps:
+                    - step:
+                        identifier: aquatrivy_container
+                        type: AquaTrivy
+                        spec:
+                          advanced:
+                            fail_on_severity: <+input>
+                          resources:
+                            limits:
+                              memory: <+input>
+                              cpu: <+input>
+              delegateSelectors: <+input>
+      - stage:
+          name: deploy
+          identifier: deploy
+          tags: {}
+          template:
+            templateRef: account.deploy_k8s
+            versionLabel: v0.1
+            templateInputs:
+              type: Deployment
+              spec:
+                environment:
+                  environmentRef: <+input>
+                  environmentInputs: <+input>
+                  serviceOverrideInputs: <+input>
+                  infrastructureDefinitions: <+input>
+                service:
+                  serviceRef: <+input>
+                  serviceInputs: <+input>
+              delegateSelectors: <+input>
