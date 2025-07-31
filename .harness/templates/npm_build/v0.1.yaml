@@ -41,8 +41,8 @@ template:
               name: ESLint Check
               identifier: ESLint_Check
               spec:
-                connectorRef: <+input>
-                image: <+input>.default(node:20)
+                connectorRef: <+execution.steps.Install_Dependencies.spec.connectorRef>
+                image: <+execution.steps.Install_Dependencies.spec.image>
                 shell: Sh
                 command: |-
                   echo "Exécution du linting..."
@@ -53,8 +53,8 @@ template:
               name: Build Application
               identifier: Build_Application
               spec:
-                connectorRef: <+input>
-                image: <+input>.default(node:20)
+                connectorRef: <+execution.steps.Install_Dependencies.spec.connectorRef>
+                image: <+execution.steps.Install_Dependencies.spec.image>
                 shell: Sh
                 command: |-
                   echo "Construction de l'application Next.js..."
@@ -66,8 +66,8 @@ template:
               name: Unit Tests
               identifier: Unit_Tests
               spec:
-                connectorRef: <+input>
-                image: <+input>.default(node:20)
+                connectorRef: <+execution.steps.Install_Dependencies.spec.connectorRef>
+                image: <+execution.steps.Install_Dependencies.spec.image>
                 shell: Sh
                 command: |-
                   echo "Exécution des tests unitaires..."
@@ -77,8 +77,8 @@ template:
               name: NPM Audit
               identifier: NPM_Audit
               spec:
-                connectorRef: <+input>
-                image: <+input>.default(node:20)
+                connectorRef: <+execution.steps.Install_Dependencies.spec.connectorRef>
+                image: <+execution.steps.Install_Dependencies.spec.image>
                 shell: Sh
                 command: |-
                   echo "Audit de sécurité des dépendances npm..."
@@ -89,7 +89,7 @@ template:
               name: Build and Push Docker Image
               identifier: BuildAndPushDockerRegistry_1
               spec:
-                connectorRef: <+input>
+                connectorRef: <+execution.steps.Install_Dependencies.spec.connectorRef>
                 repo: <+input>
                 tags:
                   - <+pipeline.sequenceId>
