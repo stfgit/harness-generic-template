@@ -86,9 +86,34 @@ template:
                           connectorRef: <+input>
                           image: <+input>.default(node:20)
                     - step:
+                        identifier: ESLint_Check
+                        type: Run
+                        spec:
+                          connectorRef: <+input>
+                          image: <+input>.default(node:20)
+                    - step:
+                        identifier: Build_Application
+                        type: Run
+                        spec:
+                          connectorRef: <+input>
+                          image: <+input>.default(node:20)
+                    - step:
+                        identifier: Unit_Tests
+                        type: Run
+                        spec:
+                          connectorRef: <+input>
+                          image: <+input>.default(node:20)
+                    - step:
+                        identifier: NPM_Audit
+                        type: Run
+                        spec:
+                          connectorRef: <+input>
+                          image: <+input>.default(node:20)
+                    - step:
                         identifier: BuildAndPushDockerRegistry_1
                         type: BuildAndPushDockerRegistry
                         spec:
+                          connectorRef: <+input>
                           repo: <+input>
       - stage:
           name: scan images
