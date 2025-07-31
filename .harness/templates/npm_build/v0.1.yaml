@@ -36,20 +36,13 @@ template:
                   echo "Vérification installation..."
                   npx next --version
                   echo "Dépendances installées avec succès"
-              outputVariables:
-                - name: USED_CONNECTOR
-                  type: String
-                  value: <+step.spec.connectorRef>
-                - name: USED_IMAGE
-                  type: String
-                  value: <+step.spec.image>
           - step:
               type: Run
               name: ESLint Check
               identifier: ESLint_Check
               spec:
-                connectorRef: <+steps.Install_Dependencies.output.outputVariables.USED_CONNECTOR>
-                image: <+steps.Install_Dependencies.output.outputVariables.USED_IMAGE>
+                connectorRef: <+input>
+                image: <+input>.default(node:20)
                 shell: Sh
                 command: |-
                   echo "Exécution du linting..."
@@ -60,8 +53,8 @@ template:
               name: Build Application
               identifier: Build_Application
               spec:
-                connectorRef: <+steps.Install_Dependencies.output.outputVariables.USED_CONNECTOR>
-                image: <+steps.Install_Dependencies.output.outputVariables.USED_IMAGE>
+                connectorRef: <+input>
+                image: <+input>.default(node:20)
                 shell: Sh
                 command: |-
                   echo "Construction de l'application Next.js..."
@@ -73,8 +66,8 @@ template:
               name: Unit Tests
               identifier: Unit_Tests
               spec:
-                connectorRef: <+steps.Install_Dependencies.output.outputVariables.USED_CONNECTOR>
-                image: <+steps.Install_Dependencies.output.outputVariables.USED_IMAGE>
+                connectorRef: <+input>
+                image: <+input>.default(node:20)
                 shell: Sh
                 command: |-
                   echo "Exécution des tests unitaires..."
@@ -84,8 +77,8 @@ template:
               name: NPM Audit
               identifier: NPM_Audit
               spec:
-                connectorRef: <+steps.Install_Dependencies.output.outputVariables.USED_CONNECTOR>
-                image: <+steps.Install_Dependencies.output.outputVariables.USED_IMAGE>
+                connectorRef: <+input>
+                image: <+input>.default(node:20)
                 shell: Sh
                 command: |-
                   echo "Audit de sécurité des dépendances npm..."
@@ -96,7 +89,7 @@ template:
               name: Build and Push Docker Image
               identifier: BuildAndPushDockerRegistry_1
               spec:
-                connectorRef: <+steps.Install_Dependencies.output.outputVariables.USED_CONNECTOR>
+                connectorRef: <+input>
                 repo: <+input>
                 tags:
                   - <+pipeline.sequenceId>
