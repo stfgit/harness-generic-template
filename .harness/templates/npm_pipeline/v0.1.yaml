@@ -197,6 +197,6 @@ template:
                   serviceOverrideInputs: <+input>
                   infrastructureDefinitions: <+input>
                 service:
-                  serviceRef: <+input>
-                  serviceInputs: <+input>
+                  useFromStage:
+                    stage: deploy
               delegateSelectors: <+input>
