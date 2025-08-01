@@ -193,6 +193,8 @@ template:
                   - <+pipeline.executionId>
                   - latest
                 caching: true
+                dockerfile: Dockerfile
+                context: .
                 resources:
                   limits:
                     memory: <+input>
