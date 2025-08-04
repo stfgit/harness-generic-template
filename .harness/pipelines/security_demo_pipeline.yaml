@@ -6,83 +6,230 @@ pipeline:
   tags:
     security: "demo"
     environment: "hardened"
-  template:
-    templateRef: account.security_hardened_pipeline_template
-    versionLabel: v0.1
-    templateInputs:
-      properties:
-        ci:
-          codebase:
-            connectorRef: account.Github
-            repoName: stfgit/nextly
-            build: <+input>
-      stages:
-        - stage:
-            identifier: source_security_scan_hardened
-            template:
-              templateInputs:
+  properties:
+    ci:
+      codebase:
+        connectorRef: account.Github
+        repoName: <+input>
+        build: <+input>
+        sparseCheckout: []
+  stages:
+    # Stage 1: Pre-Security Validation
+    - stage:
+        name: Pre-Security Validation
+        identifier: pre_security_validation
+        type: Custom
+        spec:
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: Pipeline Security Initialization
+                  identifier: pipeline_security_init
+                  spec:
+                    connectorRef: org.Dockerhub
+                    image: alpine:3.19-slim
+                    shell: Sh
+                    command: |
+                      echo "🚀 ENTERPRISE SECURITY PIPELINE INITIALIZED"
+                      echo "============================================"
+                      echo "📅 Pipeline Start: $(date -Iseconds)"
+                      echo "🔒 Security Level: ENTERPRISE HARDENED"
+                      echo "📋 Compliance: SOX, GDPR, CIS, NIST"
+                      echo "🔍 Repository: <+codebase.repoName>"
+                      echo "🌿 Branch: <+codebase.branch>"
+                      echo "✅ Pre-security validation completed"
+
+    # Stage 2: Source Code Security Scan (Version Durcie v0.2)
+    - stage:
+        name: Source Code Security Scan - Hardened
+        identifier: source_security_scan_hardened
+        template:
+          templateRef: account.source_code_scan
+          versionLabel: v0.2
+          templateInputs:
+            type: SecurityTests
+            spec:
+              infrastructure:
+                type: KubernetesDirect
                 spec:
-                  infrastructure:
-                    spec:
-                      connectorRef: account.k8sdocacloud
-                      namespace: harness-security-scan
-        - stage:
-            identifier: secure_build_package
-            template:
-              templateInputs:
+                  connectorRef: <+input>.default(account.k8sdocacloud)
+                  namespace: <+input>.default(harness-security-scan)
+              execution:
+                steps:
+                  - step:
+                      identifier: owasp
+                      type: Owasp
+                      spec:
+                        advanced:
+                          fail_on_severity: <+input>.default(medium)
+                        resources:
+                          limits:
+                            memory: <+input>.default(4Gi)
+                            cpu: <+input>.default(2000m)
+                  - step:
+                      identifier: aquatrivy
+                      type: AquaTrivy
+                      spec:
+                        advanced:
+                          fail_on_severity: <+input>.default(medium)
+                        resources:
+                          limits:
+                            memory: <+input>.default(3Gi)
+                            cpu: <+input>.default(1500m)
+                  - step:
+                      identifier: gitleaks
+                      type: Gitleaks
+                      spec:
+                        advanced:
+                          fail_on_severity: <+input>.default(low)
+                        resources:
+                          limits:
+                            memory: <+input>.default(2Gi)
+                            cpu: <+input>.default(1000m)
+            delegateSelectors: <+input>
+
+    # Stage 3: Build avec sécurité renforcée
+    - stage:
+        name: Secure Build and Package
+        identifier: secure_build_package
+        template:
+          templateRef: account.npm_build
+          versionLabel: v0.1
+          templateInputs:
+            type: CI
+            spec:
+              infrastructure:
+                type: KubernetesDirect
                 spec:
-                  execution:
-                    steps:
-                      - step:
-                          identifier: BuildAndPushDockerRegistry_1
-                          spec:
-                            repo: stfgit/nextly-secure
-        - stage:
-            identifier: container_security_scan_hardened
-            template:
-              templateInputs:
+                  connectorRef: <+input>.default(account.k8sdocacloud)
+                  namespace: <+input>.default(harness-ci-secure)
+              execution:
+                steps:
+                  - step:
+                      identifier: Install_Dependencies
+                      type: Run
+                      spec:
+                        connectorRef: <+input>.default(org.Dockerhub)
+                        image: <+input>.default(node:20-alpine)
+                  - step:
+                      identifier: BuildAndPushDockerRegistry_1
+                      type: BuildAndPushDockerRegistry
+                      spec:
+                        connectorRef: <+input>.default(org.Dockerhub)
+                        repo: <+input>
+
+    # Stage 4: Container Image Security Scan (Version Durcie v0.2)
+    - stage:
+        name: Container Security Scan - Hardened
+        identifier: container_security_scan_hardened
+        template:
+          templateRef: account.images_scan
+          versionLabel: v0.2
+          templateInputs:
+            type: SecurityTests
+            spec:
+              infrastructure:
+                type: KubernetesDirect
                 spec:
-                  infrastructure:
-                    spec:
-                      connectorRef: account.k8sdocacloud
-                      namespace: harness-security-scan
-        - stage:
-            identifier: security_policy_enforcement
-            template:
-              templateInputs:
+                  connectorRef: <+input>.default(account.k8sdocacloud)
+                  namespace: <+input>.default(harness-security-scan)
+              execution:
+                steps: <+input>
+            delegateSelectors: <+input>
+
+    # Stage 5: Security Policies Enforcement
+    - stage:
+        name: Security Policy Enforcement
+        identifier: security_policy_enforcement
+        template:
+          templateRef: account.security_policies
+          versionLabel: v0.1
+          templateInputs:
+            type: Custom
+            spec:
+              infrastructure:
+                type: KubernetesDirect
                 spec:
-                  infrastructure:
-                    spec:
-                      connectorRef: account.k8sdocacloud
-                      namespace: harness-governance
-        - stage:
-            identifier: security_team_approval
-            template:
-              templateInputs:
-                spec:
-                  execution:
-                    steps:
-                      - step:
-                          identifier: security_approval
-                          spec:
-                            approvers:
-                              minimumCount: 1
-                              userGroups:
-                                - org.DevOps_Team
-        - stage:
-            identifier: secure_deploy_dev
-            template:
-              templateInputs:
-                spec:
-                  service:
-                    serviceRef: nextly_secure_svc
-      variables:
-        - name: security_level
-          type: String
-          value: ENTERPRISE_HARDENED
-        - name: compliance_frameworks
-          type: String
-          value: "SOX,GDPR,CIS,NIST"
-        - name: manual_approval_required
-          type: String
-          value: "true"
+                  connectorRef: <+input>.default(account.k8sdocacloud)
+                  namespace: <+input>.default(harness-governance)
+            delegateSelectors: <+input>
+
+    # Stage 6: Security Approval (Manual pour Production)
+    - stage:
+        name: Security Team Approval
+        identifier: security_team_approval
+        template:
+          templateRef: account.manual_approval
+          versionLabel: v0.1
+          templateInputs:
+            type: Approval
+            spec:
+              execution:
+                steps:
+                  - step:
+                      identifier: approval
+                      type: HarnessApproval
+                      spec:
+                        approvers:
+                          minimumCount: <+input>.default(1)
+                          userGroups: <+input>.default(org.DevOps_Team)
+            delegateSelectors: <+input>
+        when:
+          pipelineStatus: Success
+          condition: <+input>.default("true")
+
+    # Stage 7: Secure Deployment to Dev
+    - stage:
+        name: Secure Deploy to Dev
+        identifier: secure_deploy_dev
+        template:
+          templateRef: account.deploy_k8s
+          versionLabel: v0.1
+          templateInputs:
+            type: Deployment
+            spec:
+              environment:
+                environmentRef: <+input>.default(dev)
+                infrastructureDefinitions: <+input>
+              service:
+                serviceRef: <+input>
+                serviceInputs: <+input>
+            delegateSelectors: <+input>
+
+  # Configuration globale du pipeline
+  variables:
+    - name: security_level
+      type: String
+      value: ENTERPRISE_HARDENED
+      description: "Level of security enforcement"
+    - name: compliance_frameworks
+      type: String
+      value: "SOX,GDPR,CIS,NIST"
+      description: "Required compliance frameworks"
+    - name: manual_approval_required
+      type: String
+      value: "true"
+      description: "Require manual security approval"
+
+  # Delegates sécurisés
+  delegateSelectors: <+input>
+
+  # Notifications de sécurité
+  notificationRules:
+    - name: security_notifications
+      identifier: security_notifications
+      pipelineEvents:
+        - type: PipelineFailed
+        - type: StageFailed
+          forStages:
+            - source_security_scan_hardened
+            - container_security_scan_hardened
+            - security_policy_enforcement
+      notificationMethod:
+        type: Email
+        spec:
+          userGroups:
+            - org._organization_all_users
+          recipients: []
+      enabled: true
