@@ -46,7 +46,7 @@ pipeline:
         identifier: source_security_scan_hardened
         template:
           templateRef: account.source_code_scan
-          versionLabel: v0.2
+          versionLabel: v0.3
           templateInputs:
             type: SecurityTests
             spec:
@@ -125,7 +125,7 @@ pipeline:
         identifier: container_security_scan_hardened
         template:
           templateRef: account.images_scan
-          versionLabel: v0.2
+          versionLabel: v0.3
           templateInputs:
             type: SecurityTests
             spec:

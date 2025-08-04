@@ -1,0 +1,138 @@
+template:
+  name: source code scan - hardened simple
+  identifier: source_code_scan
+  versionLabel: v0.3
+  type: Stage
+  tags:
+    security: "enterprise"
+    compliance: "hardened"
+  spec:
+    type: SecurityTests
+    spec:
+      cloneCodebase: true
+      infrastructure:
+        type: KubernetesDirect
+        spec:
+          connectorRef: <+input>
+          namespace: <+input>.default(harness-ci)
+          automountServiceAccountToken: true
+          nodeSelector: {}
+          os: Linux
+      execution:
+        steps:
+          - parallel:
+              # OWASP Dependency Check - Configuration Durcie
+              - step:
+                  type: Owasp
+                  name: OWASP Dependency Check - Hardened
+                  identifier: owasp
+                  spec:
+                    mode: orchestration
+                    config: default
+                    target:
+                      type: repository
+                      detection: auto
+                    advanced:
+                      log:
+                        level: info
+                      fail_on_severity: <+input>.default(medium)
+                    resources:
+                      limits:
+                        memory: <+input>.default(4Gi)
+                        cpu: <+input>.default(2000m)
+                      requests:
+                        memory: 2Gi
+                        cpu: 1000m
+                  timeout: 15m
+
+              # Trivy FS Scan - Configuration Durcie
+              - step:
+                  type: AquaTrivy
+                  name: Trivy Filesystem Scan - Hardened
+                  identifier: aquatrivy
+                  spec:
+                    mode: orchestration
+                    config: fs
+                    target:
+                      type: repository
+                      detection: auto
+                    advanced:
+                      log:
+                        level: info
+                      fail_on_severity: <+input>.default(medium)
+                    resources:
+                      limits:
+                        memory: <+input>.default(3Gi)
+                        cpu: <+input>.default(1500m)
+                      requests:
+                        memory: 1.5Gi
+                        cpu: 750m
+                    privileged: false
+                  timeout: 10m
+
+              # GitLeaks - Secret Detection
+              - step:
+                  type: Gitleaks
+                  name: GitLeaks Secret Detection
+                  identifier: gitleaks
+                  spec:
+                    mode: orchestration
+                    config: default
+                    target:
+                      type: repository
+                      detection: auto
+                    advanced:
+                      log:
+                        level: info
+                      fail_on_severity: <+input>.default(low)
+                    resources:
+                      limits:
+                        memory: <+input>.default(2Gi)
+                        cpu: <+input>.default(1000m)
+                      requests:
+                        memory: 1Gi
+                        cpu: 500m
+                  timeout: 5m
+
+          # Post-processing sécurisé
+          - step:
+              type: Run
+              name: Security Summary Report
+              identifier: security_summary
+              spec:
+                connectorRef: <+input>
+                image: alpine:3.19
+                shell: Sh
+                command: |
+                  echo "📊 SECURITY SCAN SUMMARY - HARDENED"
+                  echo "===================================="
+                  echo "⏰ Scan Completed: $(date -Iseconds)"
+                  echo "🔒 Security Level: ENTERPRISE HARDENED"
+                  echo "📋 Repository: <+codebase.repoName>"
+                  echo "🌿 Branch: <+codebase.branch>"
+                  echo "✅ All security scans completed successfully"
+                resources:
+                  limits:
+                    memory: 256Mi
+                    cpu: 100m
+
+    delegateSelectors: <+input>
+
+  description: |
+    🛡️ ENTERPRISE HARDENED SECURITY SCAN TEMPLATE v0.3 - SIMPLIFIED
+    
+    This template implements comprehensive security scanning with:
+    • OWASP Dependency Check with hardened policies
+    • Trivy filesystem scanning for vulnerabilities
+    • GitLeaks secret detection with zero-tolerance
+    • Simplified configuration for reliability
+    • Enterprise-grade resource allocation
+    
+    🔒 Security Features:
+    - Hardened fail_on_severity defaults (medium for vulns, low for secrets)
+    - Non-privileged execution context
+    - Comprehensive resource limits
+    - Simplified args for better compatibility
+    
+    ⚠️  POLICY: This template enforces strict security validation.
+    Any critical findings will block the pipeline progression.

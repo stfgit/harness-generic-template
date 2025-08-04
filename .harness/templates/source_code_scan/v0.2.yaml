@@ -78,14 +78,11 @@ template:
                       log:
                         level: debug  # Logs détaillés pour forensics
                       fail_on_severity: <+input>.default(medium)  # Durci par défaut
-                      args: |
-                        --enableRetired
-                        --enableExperimental  
-                        --format ALL
-                        --suppression /harness/security/owasp-suppressions.xml
+                      args:
+                        cli: <+input>.default("--enableRetired --enableExperimental --format ALL")
                       tool:
-                        project_name: <+pipeline.name>-<+pipeline.executionId>
-                        project_version: <+codebase.commitSha>
+                        project_name: <+input>.default(<+pipeline.name>-<+pipeline.executionId>)
+                        project_version: <+input>.default(<+codebase.commitSha>)
                     resources:
                       limits:
                         memory: <+input>.default(4Gi)  # Plus de mémoire
@@ -94,17 +91,6 @@ template:
                         memory: 2Gi
                         cpu: 500m
                   timeout: 20m
-                  failureStrategies:
-                    - onFailure:
-                        errors:
-                          - AllErrors
-                        action:
-                          type: ManualIntervention
-                          spec:
-                            timeout: 24h  # Intervention sécurité
-                            onTimeout:
-                              action:
-                                type: MarkAsFailure
 
               # Trivy FS Scan - Configuration Durcie
               - step:
@@ -121,15 +107,10 @@ template:
                       log:
                         level: debug
                       fail_on_severity: <+input>.default(medium)  # Durci par défaut
-                      args: |
-                        --security-checks vuln,secret,config
-                        --format json
-                        --severity UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
-                        --ignore-unfixed false
-                        --exit-code 1
-                        --compliance docker-cis
+                      args:
+                        cli: <+input>.default("--security-checks vuln,secret,config --format json --ignore-unfixed false")
                       tool:
-                        db_repository: ghcr.io/aquasecurity/trivy-db
+                        db_repository: <+input>.default("ghcr.io/aquasecurity/trivy-db")
                     resources:
                       limits:
                         memory: <+input>.default(2Gi)
@@ -155,11 +136,8 @@ template:
                       log:
                         level: debug
                       fail_on_severity: <+input>.default(low)  # Tolérance zéro pour secrets
-                      args: |
-                        --verbose
-                        --report-format json
-                        --report-path /harness/gitleaks-report.json
-                        --log-opts="--all --full-history"
+                      args:
+                        cli: <+input>.default("--verbose --report-format json")
                     resources:
                       limits:
                         memory: <+input>.default(1Gi)

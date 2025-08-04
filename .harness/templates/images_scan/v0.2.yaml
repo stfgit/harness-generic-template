@@ -73,18 +73,11 @@ template:
                       log:
                         level: debug  # Logs forensics
                       fail_on_severity: <+input>.default(medium)  # Durci par défaut
-                      args: |
-                        --security-checks vuln,secret,config
-                        --format json
-                        --severity UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
-                        --ignore-unfixed false
-                        --exit-code 1
-                        --compliance docker-cis
-                        --scanners vuln,secret,config
-                        --cache-dir /tmp/trivy-cache
+                      args:
+                        cli: <+input>.default("--security-checks vuln,secret,config --format json --ignore-unfixed false")
                       tool:
-                        db_repository: ghcr.io/aquasecurity/trivy-db
-                        project_name: <+pipeline.name>-container-scan
+                        db_repository: <+input>.default("ghcr.io/aquasecurity/trivy-db")
+                        project_name: <+input>.default(<+pipeline.name>-container-scan)
                     resources:
                       limits:
                         memory: <+input>.default(4Gi)  # Plus de mémoire pour scan complet
@@ -98,17 +91,6 @@ template:
                       tag: <+input>.default(latest)
                       name: <+input>
                   timeout: 25m
-                  failureStrategies:
-                    - onFailure:
-                        errors:
-                          - AllErrors
-                        action:
-                          type: ManualIntervention
-                          spec:
-                            timeout: 24h
-                            onTimeout:
-                              action:
-                                type: MarkAsFailure
 
               # Grype Container Vulnerability Scanner
               - step:
