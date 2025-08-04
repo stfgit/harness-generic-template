@@ -1,20 +1,21 @@
-pipeline:
+template:
   name: Security Hardened Pipeline - Enterprise
-  identifier: security_hardened_pipeline
-  projectIdentifier: harness_generic_template
-  orgIdentifier: stf
+  identifier: security_hardened_pipeline_template
+  versionLabel: v0.1
+  type: Pipeline
   tags:
     security: "enterprise"
     compliance: "sox-gdpr-cis-nist"
     environment: "production-ready"
-  properties:
-    ci:
-      codebase:
-        connectorRef: account.Github
-        repoName: <+input>
-        build: <+input>
-        sparseCheckout: []
-  stages:
+  spec:
+    properties:
+      ci:
+        codebase:
+          connectorRef: <+input>
+          repoName: <+input>
+          build: <+input>
+          sparseCheckout: []
+    stages:
     # Stage 1: Pre-Security Validation
     - stage:
         name: Pre-Security Validation

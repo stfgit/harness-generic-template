@@ -1,0 +1,88 @@
+pipeline:
+  name: Security Demo - Enterprise Hardened
+  identifier: security_demo_pipeline
+  projectIdentifier: harness_generic_template
+  orgIdentifier: stf
+  tags:
+    security: "demo"
+    environment: "hardened"
+  template:
+    templateRef: account.security_hardened_pipeline_template
+    versionLabel: v0.1
+    templateInputs:
+      properties:
+        ci:
+          codebase:
+            connectorRef: account.Github
+            repoName: stfgit/nextly
+            build: <+input>
+      stages:
+        - stage:
+            identifier: source_security_scan_hardened
+            template:
+              templateInputs:
+                spec:
+                  infrastructure:
+                    spec:
+                      connectorRef: account.k8sdocacloud
+                      namespace: harness-security-scan
+        - stage:
+            identifier: secure_build_package
+            template:
+              templateInputs:
+                spec:
+                  execution:
+                    steps:
+                      - step:
+                          identifier: BuildAndPushDockerRegistry_1
+                          spec:
+                            repo: stfgit/nextly-secure
+        - stage:
+            identifier: container_security_scan_hardened
+            template:
+              templateInputs:
+                spec:
+                  infrastructure:
+                    spec:
+                      connectorRef: account.k8sdocacloud
+                      namespace: harness-security-scan
+        - stage:
+            identifier: security_policy_enforcement
+            template:
+              templateInputs:
+                spec:
+                  infrastructure:
+                    spec:
+                      connectorRef: account.k8sdocacloud
+                      namespace: harness-governance
+        - stage:
+            identifier: security_team_approval
+            template:
+              templateInputs:
+                spec:
+                  execution:
+                    steps:
+                      - step:
+                          identifier: security_approval
+                          spec:
+                            approvers:
+                              minimumCount: 1
+                              userGroups:
+                                - org.DevOps_Team
+        - stage:
+            identifier: secure_deploy_dev
+            template:
+              templateInputs:
+                spec:
+                  service:
+                    serviceRef: nextly_secure_svc
+      variables:
+        - name: security_level
+          type: String
+          value: ENTERPRISE_HARDENED
+        - name: compliance_frameworks
+          type: String
+          value: "SOX,GDPR,CIS,NIST"
+        - name: manual_approval_required
+          type: String
+          value: "true"
