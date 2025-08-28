@@ -1,6 +1,0 @@
-environment:
-  name: prod
-  identifier: prod
-  orgIdentifier: stf
-  projectIdentifier: harness_generic_template
-  type: Production

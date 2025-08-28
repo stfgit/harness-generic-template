@@ -13,7 +13,6 @@ harness-generic-template/
 ├── README.md                               # Basic repository description
 ├── DEVSECOPS_GUIDE.md                     # Comprehensive DevSecOps usage guide
 ├── CLAUDE.md                              # This technical guide
-├── akostash/                              # Additional template variants
 ├── docs/                                  # Documentation directory
 │   ├── examples/USAGE_EXAMPLES.md        # Practical examples
 │   └── security/                         # Security documentation
